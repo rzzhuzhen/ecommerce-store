@@ -29,7 +29,7 @@ jobs:
           REACT_APP_SUPABASE_ANON_KEY: ${{ secrets.REACT_APP_SUPABASE_ANON_KEY }}
 
       - name: Deploy to Cloudflare Pages
-        run: npx wrangler pages deploy frontend/build --project-name=ecommerce
+        run: npx wrangler pages deploy frontend/build --project-name=ecommerce --create-project
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
