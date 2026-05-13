@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Heart, ShoppingCart, Star } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
-import { api, endpoints } from '../api/api';
+import { favoritesService } from '../api/supabase';
 
 const Favorites = () => {
   const [favoriteProducts, setFavoriteProducts] = useState([]);
@@ -17,16 +17,15 @@ const Favorites = () => {
     if (isAuthenticated) {
       loadFavoriteProducts();
     }
-    
-    // Listen for favorites updates
+
     const handleFavoritesUpdate = () => {
       if (isAuthenticated) {
         loadFavoriteProducts();
       }
     };
-    
+
     window.addEventListener('favoritesUpdated', handleFavoritesUpdate);
-    
+
     return () => {
       window.removeEventListener('favoritesUpdated', handleFavoritesUpdate);
     };
@@ -41,8 +40,9 @@ const Favorites = () => {
 
     try {
       setLoading(true);
-      const response = await api.get(endpoints.favorites.list);
-      setFavoriteProducts(response.data || []);
+      const data = await favoritesService.get();
+      // Extract products from the favorites structure
+      setFavoriteProducts(data?.map(fav => fav.products).filter(Boolean) || []);
     } catch (error) {
       console.error('Failed to load favorite products:', error);
       setFavoriteProducts([]);
@@ -53,14 +53,11 @@ const Favorites = () => {
 
   const handleToggleFavorite = async (productId) => {
     try {
-      await api.delete(endpoints.favorites.remove(productId));
+      await favoritesService.remove(productId);
       setFavoriteProducts(prev => prev.filter(product => product.id !== productId));
-      
-      // Dispatch custom event to update header count
       window.dispatchEvent(new CustomEvent('favoritesUpdated'));
     } catch (error) {
       console.error('Failed to remove favorite:', error);
-      // Optionally show error message to user
     }
   };
 
@@ -85,29 +82,6 @@ const Favorites = () => {
       style: 'currency',
       currency: 'USD',
     }).format(price);
-  };
-
-  const renderRating = (rating, reviewCount) => {
-    if (!rating) return null;
-
-    return (
-      <div className="flex items-center space-x-1">
-        <div className="flex items-center">
-          {[...Array(5)].map((_, i) => (
-            <Star
-              key={i}
-              size={14}
-              className={`${
-                i < Math.floor(rating)
-                  ? 'text-yellow-400 fill-current'
-                  : 'text-gray-300'
-              }`}
-            />
-          ))}
-        </div>
-        <span className="text-xs text-gray-500">({reviewCount})</span>
-      </div>
-    );
   };
 
   if (loading) {
@@ -146,7 +120,6 @@ const Favorites = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {favoriteProducts.map((product) => (
             <div key={product.id} className="product-card group">
-              {/* Product Image */}
               <div className="relative overflow-hidden bg-gray-100">
                 <Link to={`/products/${product.id}`}>
                   {product.image_url && !failedImages.has(product.id) ? (
@@ -164,17 +137,15 @@ const Favorites = () => {
                     </div>
                   )}
                 </Link>
-                
-                {/* Remove from Favorites Button */}
-                <button 
+
+                <button
                   onClick={() => handleToggleFavorite(product.id)}
                   className="absolute top-2 right-2 p-2 bg-red-500 rounded-full shadow-soft opacity-0 group-hover:opacity-100 transition-all duration-200 hover:bg-red-600"
                   title="Remove from favorites"
                 >
                   <Heart size={16} className="text-white fill-current" />
                 </button>
-                
-                {/* Stock Badge */}
+
                 {product.stock <= 10 && product.stock > 0 && (
                   <span className="absolute top-2 left-2 badge badge-warning">
                     Low Stock
@@ -187,31 +158,41 @@ const Favorites = () => {
                 )}
               </div>
 
-              {/* Product Info */}
               <div className="p-4">
-                {/* Category */}
                 <div className="text-xs text-primary-600 font-medium mb-1">
                   {product.category}
                 </div>
 
-                {/* Product Name */}
                 <Link to={`/products/${product.id}`}>
                   <h3 className="font-medium text-gray-900 mb-2 line-clamp-2 hover:text-primary-600 transition-colors">
                     {product.name}
                   </h3>
                 </Link>
 
-                {/* Rating */}
-                {renderRating(product.rating, product.review_count)}
+                {product.rating && (
+                  <div className="flex items-center space-x-1">
+                    <div className="flex items-center">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          size={14}
+                          className={`${
+                            i < Math.floor(product.rating)
+                              ? 'text-yellow-400 fill-current'
+                              : 'text-gray-300'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
 
-                {/* Price */}
                 <div className="mt-2 mb-3">
                   <span className="text-lg font-bold text-gray-900">
                     {formatPrice(product.price)}
                   </span>
                 </div>
 
-                {/* Add to Cart Button */}
                 <button
                   onClick={() => handleAddToCart(product)}
                   disabled={isAdding[product.id] || product.stock === 0}

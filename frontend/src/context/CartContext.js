@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useAuth } from './AuthContext';
-import { api, endpoints } from '../api/api';
+import { cartService } from '../api/supabase';
 
 const CartContext = createContext();
 
@@ -19,14 +19,17 @@ export const CartProvider = ({ children }) => {
   const { isAuthenticated } = useAuth();
 
   const loadCart = useCallback(async () => {
-    if (!isAuthenticated) return;
-    
+    if (!isAuthenticated) {
+      setCartItems([]);
+      return;
+    }
+
     try {
       setLoading(true);
-      const response = await api.get(endpoints.cart.get);
-      setCartItems(response.data.items || []);
-    } catch (error) {
-      console.error('Failed to load cart:', error);
+      const items = await cartService.get();
+      setCartItems(items || []);
+    } catch (err) {
+      console.error('Failed to load cart:', err);
       setError('Failed to load cart');
     } finally {
       setLoading(false);
@@ -36,17 +39,19 @@ export const CartProvider = ({ children }) => {
   useEffect(() => {
     if (isAuthenticated) {
       loadCart();
+    } else {
+      setCartItems([]);
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, loadCart]);
 
   const addToCart = async (productId, quantity = 1) => {
     try {
       setError(null);
-      const response = await api.post(endpoints.cart.add, { product_id: productId, quantity });
-      setCartItems(response.data.items || []);
+      await cartService.add(productId, quantity);
+      await loadCart();
       return { success: true };
-    } catch (error) {
-      const errorMessage = error.response?.data?.detail || 'Failed to add item to cart';
+    } catch (err) {
+      const errorMessage = err.message || 'Failed to add item to cart';
       setError(errorMessage);
       return { success: false, error: errorMessage };
     }
@@ -55,11 +60,15 @@ export const CartProvider = ({ children }) => {
   const removeFromCart = async (productId) => {
     try {
       setError(null);
-      await api.delete(endpoints.cart.remove(productId));
-      setCartItems(prev => prev.filter(item => item.product_id !== productId));
+      // Find cart item by product_id
+      const cartItem = cartItems.find(item => item.product_id === productId);
+      if (cartItem) {
+        await cartService.remove(cartItem.id);
+      }
+      await loadCart();
       return { success: true };
-    } catch (error) {
-      const errorMessage = error.response?.data?.detail || 'Failed to remove item from cart';
+    } catch (err) {
+      const errorMessage = err.message || 'Failed to remove item from cart';
       setError(errorMessage);
       return { success: false, error: errorMessage };
     }
@@ -72,11 +81,14 @@ export const CartProvider = ({ children }) => {
 
     try {
       setError(null);
-      const response = await api.put(endpoints.cart.update(productId), { quantity });
-      setCartItems(response.data.items || []);
+      const cartItem = cartItems.find(item => item.product_id === productId);
+      if (cartItem) {
+        await cartService.update(cartItem.id, quantity);
+      }
+      await loadCart();
       return { success: true };
-    } catch (error) {
-      const errorMessage = error.response?.data?.detail || 'Failed to update quantity';
+    } catch (err) {
+      const errorMessage = err.message || 'Failed to update quantity';
       setError(errorMessage);
       return { success: false, error: errorMessage };
     }
@@ -85,18 +97,18 @@ export const CartProvider = ({ children }) => {
   const clearCart = async () => {
     try {
       setError(null);
-      await api.delete(endpoints.cart.clear);
+      await cartService.clear();
       setCartItems([]);
       return { success: true };
-    } catch (error) {
-      const errorMessage = error.response?.data?.detail || 'Failed to clear cart';
+    } catch (err) {
+      const errorMessage = err.message || 'Failed to clear cart';
       setError(errorMessage);
       return { success: false, error: errorMessage };
     }
   };
 
   const getCartTotal = () => {
-    return cartItems.reduce((total, item) => total + item.subtotal, 0);
+    return cartItems.reduce((total, item) => total + (item.subtotal || item.price * item.quantity), 0);
   };
 
   const getCartItemCount = () => {

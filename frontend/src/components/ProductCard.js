@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Star, ShoppingCart, Heart } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
-import { api, endpoints } from '../api/api';
+import { favoritesService } from '../api/supabase';
 
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
@@ -12,7 +12,6 @@ const ProductCard = ({ product }) => {
   const [isFavorited, setIsFavorited] = useState(false);
   const [imageError, setImageError] = useState(false);
 
-  // Check if product is favorited on component mount
   useEffect(() => {
     if (!isAuthenticated) {
       setIsFavorited(false);
@@ -21,8 +20,8 @@ const ProductCard = ({ product }) => {
 
     const checkFavorite = async () => {
       try {
-        const response = await api.get(endpoints.favorites.check(product.id));
-        setIsFavorited(response.data.is_favorited);
+        const result = await favoritesService.check(product.id);
+        setIsFavorited(result);
       } catch (error) {
         console.error('Failed to check favorite status:', error);
         setIsFavorited(false);
@@ -34,33 +33,27 @@ const ProductCard = ({ product }) => {
 
   const handleToggleFavorite = async () => {
     if (!isAuthenticated) {
-      // Redirect to login if not authenticated
       window.location.href = '/login';
       return;
     }
 
     try {
       if (isFavorited) {
-        // Remove from favorites
-        await api.delete(endpoints.favorites.remove(product.id));
+        await favoritesService.remove(product.id);
         setIsFavorited(false);
       } else {
-        // Add to favorites
-        await api.post(endpoints.favorites.add(product.id));
+        await favoritesService.add(product.id);
         setIsFavorited(true);
       }
-      
-      // Dispatch custom event to update header count in real-time
+
       window.dispatchEvent(new CustomEvent('favoritesUpdated'));
     } catch (error) {
       console.error('Failed to toggle favorite:', error);
-      // Optionally show error message to user
     }
   };
 
   const handleAddToCart = async () => {
     if (!isAuthenticated) {
-      // Redirect to login if not authenticated
       window.location.href = '/login';
       return;
     }
@@ -82,32 +75,8 @@ const ProductCard = ({ product }) => {
     }).format(price);
   };
 
-  const renderRating = (rating, reviewCount) => {
-    if (!rating) return null;
-
-    return (
-      <div className="flex items-center space-x-1">
-        <div className="flex items-center">
-          {[...Array(5)].map((_, i) => (
-            <Star
-              key={i}
-              size={14}
-              className={`${
-                i < Math.floor(rating)
-                  ? 'text-yellow-400 fill-current'
-                  : 'text-gray-300'
-              }`}
-            />
-          ))}
-        </div>
-        <span className="text-xs text-gray-500">({reviewCount})</span>
-      </div>
-    );
-  };
-
   return (
     <div className="product-card group">
-      {/* Product Image */}
       <div className="relative overflow-hidden bg-gray-100">
         <Link to={`/products/${product.id}`}>
           {product.image_url && !imageError ? (
@@ -125,30 +94,28 @@ const ProductCard = ({ product }) => {
             </div>
           )}
         </Link>
-        
-        {/* Wishlist Button - Only show when logged in */}
+
         {isAuthenticated && (
-          <button 
+          <button
             onClick={handleToggleFavorite}
             className={`absolute top-2 right-2 p-2 rounded-full shadow-soft opacity-0 group-hover:opacity-100 transition-all duration-200 ${
-              isFavorited 
-                ? 'bg-red-500 hover:bg-red-600' 
+              isFavorited
+                ? 'bg-red-500 hover:bg-red-600'
                 : 'bg-white hover:bg-gray-50'
             }`}
             title={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
           >
-            <Heart 
-              size={16} 
+            <Heart
+              size={16}
               className={`${
-                isFavorited 
-                  ? 'text-white fill-current' 
+                isFavorited
+                  ? 'text-white fill-current'
                   : 'text-gray-600'
-              }`} 
+              }`}
             />
           </button>
         )}
-        
-        {/* Stock Badge */}
+
         {product.stock <= 10 && product.stock > 0 && (
           <span className="absolute top-2 left-2 badge badge-warning">
             Low Stock
@@ -161,31 +128,41 @@ const ProductCard = ({ product }) => {
         )}
       </div>
 
-      {/* Product Info */}
       <div className="p-4">
-        {/* Category */}
         <div className="text-xs text-primary-600 font-medium mb-1">
           {product.category}
         </div>
 
-        {/* Product Name */}
         <Link to={`/products/${product.id}`}>
           <h3 className="font-medium text-gray-900 mb-2 line-clamp-2 hover:text-primary-600 transition-colors">
             {product.name}
           </h3>
         </Link>
 
-        {/* Rating */}
-        {renderRating(product.rating, product.review_count)}
+        {product.rating && (
+          <div className="flex items-center space-x-1">
+            <div className="flex items-center">
+              {[...Array(5)].map((_, i) => (
+                <Star
+                  key={i}
+                  size={14}
+                  className={`${
+                    i < Math.floor(product.rating)
+                      ? 'text-yellow-400 fill-current'
+                      : 'text-gray-300'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        )}
 
-        {/* Price */}
         <div className="mt-2 mb-3">
           <span className="text-lg font-bold text-gray-900">
             {formatPrice(product.price)}
           </span>
         </div>
 
-        {/* Add to Cart Button */}
         <button
           onClick={handleAddToCart}
           disabled={isAdding || product.stock === 0}
@@ -215,6 +192,3 @@ const ProductCard = ({ product }) => {
 };
 
 export default ProductCard;
-
-
-

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
-import { api, endpoints } from '../api/api';
+import { productService } from '../api/supabase';
 
 const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -16,18 +16,14 @@ const Home = () => {
   const loadHomeData = async () => {
     try {
       setLoading(true);
-      console.log('🏠 Loading home data...');
-      console.log('📡 Making API requests to:', endpoints.products.featured, 'and', endpoints.products.categories);
-      const [productsResponse, categoriesResponse] = await Promise.all([
-        api.get(endpoints.products.featured),
-        api.get(endpoints.products.categories)
+      const [products, categoryList] = await Promise.all([
+        productService.getFeatured(),
+        productService.getCategories(),
       ]);
-      
-      console.log('✅ Home data loaded:', { products: productsResponse.data, categories: categoriesResponse.data });
-      setFeaturedProducts(productsResponse.data);
-      setCategories(categoriesResponse.data);
+      setFeaturedProducts(products || []);
+      setCategories(categoryList?.map(cat => ({ id: cat, name: cat })) || []);
     } catch (error) {
-      console.error('❌ Failed to load home data:', error);
+      console.error('Failed to load home data:', error);
     } finally {
       setLoading(false);
     }
@@ -60,7 +56,7 @@ const Home = () => {
                 <span className="block text-primary-200">Products</span>
               </h1>
               <p className="text-xl text-primary-100 max-w-lg">
-                Shop the latest trends with our curated collection of high-quality products. 
+                Shop the latest trends with our curated collection of high-quality products.
                 Fast shipping, great prices, and exceptional service.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
@@ -79,7 +75,7 @@ const Home = () => {
                 </Link>
               </div>
             </div>
-            
+
             <div className="hidden lg:block">
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary-400 to-primary-600 rounded-3xl transform rotate-6"></div>
@@ -114,7 +110,7 @@ const Home = () => {
               Explore our wide range of products organized by category for easy navigation
             </p>
           </div>
-          
+
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {categories.map((category) => (
               <Link
@@ -134,11 +130,6 @@ const Home = () => {
                   <h3 className="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
                     {category.name}
                   </h3>
-                  {category.description && (
-                    <p className="text-sm text-gray-500 mt-1 line-clamp-2">
-                      {category.description}
-                    </p>
-                  )}
                 </div>
               </Link>
             ))}
@@ -166,7 +157,7 @@ const Home = () => {
               <ArrowRight size={16} />
             </Link>
           </div>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {featuredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />

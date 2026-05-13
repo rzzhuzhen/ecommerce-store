@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Star, ShoppingCart, Heart, ArrowLeft } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
-import { api, endpoints } from '../api/api';
+import { productService, favoritesService } from '../api/supabase';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -13,7 +13,7 @@ const ProductDetail = () => {
   const [addingToCart, setAddingToCart] = useState(false);
   const [isFavorited, setIsFavorited] = useState(false);
   const [imageError, setImageError] = useState(false);
-  
+
   const { addToCart } = useCart();
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
@@ -21,8 +21,8 @@ const ProductDetail = () => {
   const loadProduct = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await api.get(endpoints.products.detail(id));
-      setProduct(response.data);
+      const data = await productService.getById(id);
+      setProduct(data);
     } catch (error) {
       console.error('Failed to load product:', error);
       navigate('/products');
@@ -35,7 +35,6 @@ const ProductDetail = () => {
     loadProduct();
   }, [loadProduct]);
 
-  // Check if product is favorited on component mount
   useEffect(() => {
     if (!id || !isAuthenticated) {
       setIsFavorited(false);
@@ -44,8 +43,8 @@ const ProductDetail = () => {
 
     const checkFavorite = async () => {
       try {
-        const response = await api.get(endpoints.favorites.check(id));
-        setIsFavorited(response.data.is_favorited);
+        const result = await favoritesService.check(id);
+        setIsFavorited(result);
       } catch (error) {
         console.error('Failed to check favorite status:', error);
         setIsFavorited(false);
@@ -63,20 +62,16 @@ const ProductDetail = () => {
 
     try {
       if (isFavorited) {
-        // Remove from favorites
-        await api.delete(endpoints.favorites.remove(id));
+        await favoritesService.remove(id);
         setIsFavorited(false);
       } else {
-        // Add to favorites
-        await api.post(endpoints.favorites.add(id));
+        await favoritesService.add(id);
         setIsFavorited(true);
       }
-      
-      // Dispatch custom event to update header count in real-time
+
       window.dispatchEvent(new CustomEvent('favoritesUpdated'));
     } catch (error) {
       console.error('Failed to toggle favorite:', error);
-      // Optionally show error message to user
     }
   };
 
@@ -89,7 +84,6 @@ const ProductDetail = () => {
     setAddingToCart(true);
     try {
       await addToCart(id, quantity);
-      // Show success message or redirect to cart
     } catch (error) {
       console.error('Failed to add to cart:', error);
     } finally {
@@ -102,29 +96,6 @@ const ProductDetail = () => {
       style: 'currency',
       currency: 'USD',
     }).format(price);
-  };
-
-  const renderRating = (rating, reviewCount) => {
-    if (!rating) return null;
-
-    return (
-      <div className="flex items-center space-x-2">
-        <div className="flex items-center">
-          {[...Array(5)].map((_, i) => (
-            <Star
-              key={i}
-              size={20}
-              className={`${
-                i < Math.floor(rating)
-                  ? 'text-yellow-400 fill-current'
-                  : 'text-gray-300'
-              }`}
-            />
-          ))}
-        </div>
-        <span className="text-gray-600">({reviewCount} reviews)</span>
-      </div>
-    );
   };
 
   if (loading) {
@@ -151,7 +122,6 @@ const ProductDetail = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Back Button */}
         <button
           onClick={() => navigate('/products')}
           className="flex items-center space-x-2 text-gray-600 hover:text-primary-600 transition-colors mb-6"
@@ -161,7 +131,6 @@ const ProductDetail = () => {
         </button>
 
         <div className="grid lg:grid-cols-2 gap-12">
-          {/* Product Image */}
           <div className="space-y-4">
             <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-100 flex items-center justify-center">
               {product.image_url && !imageError ? (
@@ -179,14 +148,30 @@ const ProductDetail = () => {
             </div>
           </div>
 
-          {/* Product Info */}
           <div className="space-y-6">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
               <div className="text-sm text-primary-600 font-medium mb-2">
                 {product.category}
               </div>
-              {renderRating(product.rating, product.review_count)}
+              {product.rating && (
+                <div className="flex items-center space-x-2">
+                  <div className="flex items-center">
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        size={20}
+                        className={`${
+                          i < Math.floor(product.rating)
+                            ? 'text-yellow-400 fill-current'
+                            : 'text-gray-300'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <span className="text-gray-600">({product.rating})</span>
+                </div>
+              )}
             </div>
 
             <div className="text-3xl font-bold text-gray-900">
@@ -195,12 +180,12 @@ const ProductDetail = () => {
 
             <div className="space-y-4">
               <p className="text-gray-700 leading-relaxed">{product.description}</p>
-              
+
               <div className="flex items-center space-x-4">
                 <span className="text-sm text-gray-600">Stock:</span>
                 <span className={`font-medium ${
-                  product.stock > 10 ? 'text-success-600' : 
-                  product.stock > 0 ? 'text-warning-600' : 'text-accent-600'
+                  product.stock > 10 ? 'text-green-600' :
+                  product.stock > 0 ? 'text-yellow-600' : 'text-red-600'
                 }`}>
                   {product.stock > 0 ? `${product.stock} available` : 'Out of Stock'}
                 </span>
@@ -246,20 +231,19 @@ const ProductDetail = () => {
                     )}
                   </button>
 
-                  {/* Favorite Button - Only show when logged in */}
                   {isAuthenticated && (
-                    <button 
+                    <button
                       onClick={handleToggleFavorite}
                       className={`p-3 border rounded-lg transition-colors ${
-                        isFavorited 
-                          ? 'border-red-500 bg-red-50 text-red-600 hover:bg-red-100' 
+                        isFavorited
+                          ? 'border-red-500 bg-red-50 text-red-600 hover:bg-red-100'
                           : 'border-gray-300 text-gray-600 hover:bg-gray-50'
                       }`}
                       title={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
                     >
-                      <Heart 
-                        size={20} 
-                        className={isFavorited ? 'fill-current' : ''} 
+                      <Heart
+                        size={20}
+                        className={isFavorited ? 'fill-current' : ''}
                       />
                     </button>
                   )}

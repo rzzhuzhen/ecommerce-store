@@ -1,22 +1,39 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { api, endpoints } from '../api/api';
+import { productService } from '../api/supabase';
 
 const AdminDashboard = () => {
-  const [stats, setStats] = useState(null);
+  const [stats, setStats] = useState({
+    total_products: 0,
+    total_orders: 0,
+    total_revenue: 0,
+    pending_orders: 0,
+    low_stock_products: 0
+  });
   const [loading, setLoading] = useState(true);
   const { isAuthenticated, isAdmin } = useAuth();
 
   useEffect(() => {
     if (isAuthenticated && isAdmin) {
       loadStats();
+    } else {
+      setLoading(false);
     }
   }, [isAuthenticated, isAdmin]);
 
   const loadStats = async () => {
     try {
-      const response = await api.get(endpoints.admin.stats);
-      setStats(response.data);
+      const products = await productService.getAll();
+      const lowStock = products?.filter(p => p.stock <= 10 && p.stock > 0).length || 0;
+
+      setStats({
+        total_products: products?.length || 0,
+        total_orders: 0,
+        total_revenue: 0,
+        pending_orders: 0,
+        low_stock_products: lowStock
+      });
     } catch (error) {
       console.error('Failed to load admin stats:', error);
     } finally {
@@ -58,7 +75,7 @@ const AdminDashboard = () => {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Admin Dashboard</h1>
-        
+
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div className="bg-white rounded-lg shadow-soft p-6">
@@ -68,7 +85,7 @@ const AdminDashboard = () => {
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Total Products</p>
-                <p className="text-2xl font-bold text-gray-900">{stats?.total_products || 0}</p>
+                <p className="text-2xl font-bold text-gray-900">{stats.total_products}</p>
               </div>
             </div>
           </div>
@@ -80,7 +97,7 @@ const AdminDashboard = () => {
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Total Orders</p>
-                <p className="text-2xl font-bold text-gray-900">{stats?.total_orders || 0}</p>
+                <p className="text-2xl font-bold text-gray-900">{stats.total_orders}</p>
               </div>
             </div>
           </div>
@@ -93,7 +110,7 @@ const AdminDashboard = () => {
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Total Revenue</p>
                 <p className="text-2xl font-bold text-gray-900">
-                  ${(stats?.total_revenue || 0).toFixed(2)}
+                  ${stats.total_revenue.toFixed(2)}
                 </p>
               </div>
             </div>
@@ -106,7 +123,7 @@ const AdminDashboard = () => {
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-600">Pending Orders</p>
-                <p className="text-2xl font-bold text-gray-900">{stats?.pending_orders || 0}</p>
+                <p className="text-2xl font-bold text-gray-900">{stats.pending_orders}</p>
               </div>
             </div>
           </div>
@@ -117,14 +134,11 @@ const AdminDashboard = () => {
           <div className="bg-white rounded-lg shadow-soft p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
             <div className="space-y-3">
-              <button className="w-full btn-primary py-2">
-                Add New Product
-              </button>
+              <Link to="/products" className="w-full btn-primary py-2 text-center block">
+                View All Products
+              </Link>
               <button className="w-full btn-secondary py-2">
-                View All Orders
-              </button>
-              <button className="w-full btn-secondary py-2">
-                Manage Categories
+                Manage Orders (Coming Soon)
               </button>
             </div>
           </div>
@@ -134,32 +148,28 @@ const AdminDashboard = () => {
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
                 <div className="w-2 h-2 bg-primary-600 rounded-full"></div>
-                <span className="text-sm text-gray-600">New order received</span>
+                <span className="text-sm text-gray-600">Admin dashboard ready</span>
               </div>
               <div className="flex items-center space-x-3">
                 <div className="w-2 h-2 bg-success-600 rounded-full"></div>
-                <span className="text-sm text-gray-600">Product inventory updated</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <div className="w-2 h-2 bg-warning-600 rounded-full"></div>
-                <span className="text-sm text-gray-600">Low stock alert</span>
+                <span className="text-sm text-gray-600">Products loaded from Supabase</span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Low Stock Alert */}
-        {stats?.low_stock_products > 0 && (
-          <div className="mt-8 bg-warning-50 border border-warning-200 rounded-lg p-6">
+        {stats.low_stock_products > 0 && (
+          <div className="mt-8 bg-yellow-50 border border-yellow-200 rounded-lg p-6">
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <span className="text-2xl">⚠️</span>
               </div>
               <div className="ml-3">
-                <h3 className="text-lg font-medium text-warning-800">
+                <h3 className="text-lg font-medium text-yellow-800">
                   Low Stock Alert
                 </h3>
-                <p className="text-warning-700">
+                <p className="text-yellow-700">
                   You have {stats.low_stock_products} products with low stock that need attention.
                 </p>
               </div>

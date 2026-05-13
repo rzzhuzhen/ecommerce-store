@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Search, Filter, Grid, List, ChevronLeft, ChevronRight } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
-import { api, endpoints } from '../api/api';
+import { productService } from '../api/supabase';
 
 const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -14,7 +14,6 @@ const Products = () => {
   const [viewMode, setViewMode] = useState('grid');
   const [showFilters, setShowFilters] = useState(false);
 
-  // Filter states
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || '');
   const [priceRange, setPriceRange] = useState({
@@ -29,60 +28,33 @@ const Products = () => {
   const loadProducts = useCallback(async () => {
     try {
       setLoading(true);
-      console.log('🛍️ Loading products...');
-      const params = new URLSearchParams({
-        page: currentPage.toString(),
-        limit: itemsPerPage.toString(),
-        sort_by: sortBy,
-        sort_order: sortOrder
-      });
+      let result;
 
-      if (searchQuery) params.append('search', searchQuery);
-      if (selectedCategory) params.append('category', selectedCategory);
-      if (priceRange.min) params.append('min_price', priceRange.min);
-      if (priceRange.max) params.append('max_price', priceRange.max);
-
-      console.log('📡 Making API request to:', `${endpoints.products.list}?${params}`);
-      const response = await api.get(`${endpoints.products.list}?${params}`);
-      console.log('✅ Products response:', response.data);
-      setProducts(response.data.products || []);
-      setTotalProducts(response.data.total || 0);
-      
-      // Update URL params only if they're different to avoid infinite loops
-      const currentParams = new URLSearchParams(searchParams);
-      const paramsChanged = 
-        currentParams.get('page') !== params.get('page') ||
-        currentParams.get('search') !== params.get('search') ||
-        currentParams.get('category') !== params.get('category') ||
-        currentParams.get('min_price') !== params.get('min_price') ||
-        currentParams.get('max_price') !== params.get('max_price') ||
-        currentParams.get('sort_by') !== params.get('sort_by') ||
-        currentParams.get('sort_order') !== params.get('sort_order');
-      
-      if (paramsChanged) {
-        isInternalUpdate.current = true;
-        setSearchParams(params, { replace: true });
+      if (searchQuery) {
+        result = await productService.search(searchQuery);
+        setProducts(result || []);
+        setTotalProducts(result?.length || 0);
+      } else if (selectedCategory) {
+        result = await productService.getByCategory(selectedCategory);
+        setProducts(result || []);
+        setTotalProducts(result?.length || 0);
+      } else {
+        result = await productService.getAll();
+        setProducts(result || []);
+        setTotalProducts(result?.length || 0);
       }
     } catch (error) {
-      console.error('❌ Failed to load products:', error);
-      console.error('❌ Error details:', {
-        message: error.message,
-        code: error.code,
-        response: error.response,
-        request: error.request,
-        config: error.config
-      });
+      console.error('Failed to load products:', error);
+      setProducts([]);
+      setTotalProducts(0);
     } finally {
       setLoading(false);
     }
-  }, [currentPage, searchQuery, selectedCategory, priceRange, sortBy, sortOrder, searchParams, setSearchParams]);
+  }, [currentPage, searchQuery, selectedCategory, priceRange, sortBy, sortOrder]);
 
-  // Sync state with URL params when they change (e.g., from header search)
-  // Use a ref to track if we're updating from internal state change
   const isInternalUpdate = useRef(false);
-  
+
   useEffect(() => {
-    // Skip if this is an internal update (to prevent loops)
     if (isInternalUpdate.current) {
       isInternalUpdate.current = false;
       return;
@@ -90,49 +62,32 @@ const Products = () => {
 
     const urlSearch = searchParams.get('search') || '';
     const urlCategory = searchParams.get('category') || '';
-    const urlMinPrice = searchParams.get('min_price') || '';
-    const urlMaxPrice = searchParams.get('max_price') || '';
-    const urlSortBy = searchParams.get('sort_by') || 'name';
-    const urlSortOrder = searchParams.get('sort_order') || 'asc';
-    const urlPage = parseInt(searchParams.get('page') || '1');
 
-    // Update state if URL params changed (only update if different to avoid infinite loops)
     if (urlSearch !== searchQuery) setSearchQuery(urlSearch);
     if (urlCategory !== selectedCategory) setSelectedCategory(urlCategory);
-    if (urlMinPrice !== priceRange.min) setPriceRange(prev => ({ ...prev, min: urlMinPrice }));
-    if (urlMaxPrice !== priceRange.max) setPriceRange(prev => ({ ...prev, max: urlMaxPrice }));
-    if (urlSortBy !== sortBy) setSortBy(urlSortBy);
-    if (urlSortOrder !== sortOrder) setSortOrder(urlSortOrder);
-    if (urlPage !== currentPage) setCurrentPage(urlPage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]); // React to URL param changes
+  }, [searchParams]);
 
-  // Load products when filters change
   useEffect(() => {
     loadProducts();
   }, [loadProducts]);
 
-  // Load categories only once on mount
   useEffect(() => {
     loadCategories();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadCategories = async () => {
     try {
-      const response = await api.get(endpoints.products.categories, { timeout: 5000 });
-      setCategories(response.data || []);
+      const result = await productService.getCategories();
+      setCategories(result?.map(cat => ({ id: cat, name: cat })) || []);
     } catch (error) {
       console.error('Failed to load categories:', error);
-      // Set empty array on error to prevent UI issues
       setCategories([]);
     }
   };
 
   const handleSearch = (e) => {
     e.preventDefault();
-    // Reset to page 1 when searching - loadProducts will run automatically
-    // because searchQuery is in the dependency array
     setCurrentPage(1);
   };
 
@@ -213,7 +168,6 @@ const Products = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">All Products</h1>
           <p className="text-gray-600">
@@ -223,10 +177,8 @@ const Products = () => {
           </p>
         </div>
 
-        {/* Search and Filters */}
         <div className="bg-white rounded-lg shadow-soft p-6 mb-8">
           <div className="flex flex-col lg:flex-row gap-6">
-            {/* Search Bar */}
             <div className="flex-1">
               <form onSubmit={handleSearch} className="relative">
                 <input
@@ -260,7 +212,6 @@ const Products = () => {
               </form>
             </div>
 
-            {/* View Mode Toggle */}
             <div className="flex items-center space-x-2">
               <button
                 onClick={() => setViewMode('grid')}
@@ -284,7 +235,6 @@ const Products = () => {
               </button>
             </div>
 
-            {/* Filters Toggle */}
             <button
               onClick={() => setShowFilters(!showFilters)}
               className="btn-secondary inline-flex items-center space-x-2"
@@ -294,11 +244,9 @@ const Products = () => {
             </button>
           </div>
 
-          {/* Filters Panel */}
           {showFilters && (
             <div className="mt-6 pt-6 border-t border-gray-200">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                {/* Category Filter */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Category
@@ -320,7 +268,6 @@ const Products = () => {
                   </select>
                 </div>
 
-                {/* Price Range */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Min Price
@@ -353,7 +300,6 @@ const Products = () => {
                   />
                 </div>
 
-                {/* Sort */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Sort By
@@ -377,7 +323,6 @@ const Products = () => {
                 </div>
               </div>
 
-              {/* Clear Filters */}
               <div className="mt-4 flex justify-end">
                 <button
                   onClick={clearFilters}
@@ -390,7 +335,6 @@ const Products = () => {
           )}
         </div>
 
-        {/* Products Grid */}
         {products.length === 0 ? (
           <div className="text-center py-16">
             <div className="text-gray-400 text-6xl mb-4">🔍</div>
@@ -417,7 +361,6 @@ const Products = () => {
           </div>
         )}
 
-        {/* Pagination */}
         {renderPagination()}
       </div>
     </div>

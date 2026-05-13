@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { api, endpoints } from '../api/api';
+import { orderService } from '../api/supabase';
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -15,10 +15,8 @@ const Orders = () => {
 
   const loadOrders = async () => {
     try {
-      console.log('Loading orders...');
-      const response = await api.get(endpoints.orders.list);
-      console.log('Orders response:', response.data);
-      setOrders(response.data.orders || []);
+      const data = await orderService.getUserOrders();
+      setOrders(data || []);
     } catch (error) {
       console.error('Failed to load orders:', error);
     } finally {
@@ -73,7 +71,7 @@ const Orders = () => {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">My Orders</h1>
-        
+
         {orders.length === 0 ? (
           <div className="text-center py-16">
             <div className="text-gray-400 text-6xl mb-4">📦</div>
@@ -87,7 +85,7 @@ const Orders = () => {
                 <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900">Order #{order.id}</h3>
+                      <h3 className="text-lg font-semibold text-gray-900">Order #{order.id.slice(0, 8)}</h3>
                       <p className="text-sm text-gray-600 mt-1">
                         Placed on {new Date(order.created_at).toLocaleDateString()}
                       </p>
@@ -95,10 +93,10 @@ const Orders = () => {
                     {getStatusBadge(order.status)}
                   </div>
                 </div>
-                
+
                 <div className="p-6">
                   <div className="space-y-3">
-                    {order.items.map((item, index) => (
+                    {order.order_items?.map((item, index) => (
                       <div key={index} className="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                         <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center shadow-sm border border-gray-200 flex-shrink-0">
                           {item.image_url ? (
@@ -125,7 +123,7 @@ const Orders = () => {
                       </div>
                     ))}
                   </div>
-                  
+
                   <div className="mt-6 pt-6 border-t border-gray-200">
                     <div className="flex justify-between text-sm text-gray-600">
                       <span>Subtotal</span>

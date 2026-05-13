@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { api, endpoints } from '../api/api';
+import { createClient } from '../utils/supabase';
 
 const AuthContext = createContext();
+const supabase = createClient();
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -17,87 +18,118 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Check if user is already logged in
-    const token = localStorage.getItem('token');
-    if (token) {
-      checkAuthStatus();
-    } else {
-      setLoading(false);
-    }
+    // Check initial session
+    checkAuthStatus();
+
+    // Subscribe to auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (session?.user) {
+          setUser({
+            id: session.user.id,
+            email: session.user.email,
+            role: session.user.user_metadata?.role || 'customer',
+          });
+        } else {
+          setUser(null);
+        }
+        setLoading(false);
+      }
+    );
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const checkAuthStatus = async () => {
     try {
-      const response = await api.get(endpoints.auth.me);
-      setUser(response.data);
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        // Get profile for role info
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', session.user.id)
+          .single();
+
+        setUser({
+          id: session.user.id,
+          email: session.user.email,
+          role: profile?.role || 'customer',
+        });
+      }
     } catch (error) {
       console.error('Auth check failed:', error);
-      localStorage.removeItem('token');
     } finally {
       setLoading(false);
     }
   };
 
   const login = async (email, password) => {
-    // Clear any previous error before attempting login
     setError(null);
-    
+
     try {
-      const response = await api.post(endpoints.auth.login, { email, password });
-      const { access_token, ...userData } = response.data;
-      
-      localStorage.setItem('token', access_token);
-      setUser(userData);
-      setError(null);
-      
+      const { data, error: authError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (authError) throw authError;
+
+      // Get profile for role
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', data.user.id)
+        .single();
+
+      setUser({
+        id: data.user.id,
+        email: data.user.email,
+        role: profile?.role || 'customer',
+      });
+
       return { success: true };
     } catch (error) {
-      const errorMessage = error.response?.data?.detail || error.message || 'Invalid email or password';
+      const errorMessage = error.message || 'Invalid email or password';
       setError(errorMessage);
       return { success: false, error: errorMessage };
     }
   };
 
   const signup = async (userData) => {
+    setError(null);
+
     try {
-      const response = await api.post(endpoints.auth.signup, userData);
-      const { access_token, ...user } = response.data;
-      
-      localStorage.setItem('token', access_token);
-      setUser(user);
-      setError(null); // Only clear error on successful signup
-      
+      const { data, error: authError } = await supabase.auth.signUp({
+        email: userData.email,
+        password: userData.password,
+        options: {
+          data: {
+            full_name: `${userData.firstName} ${userData.lastName}`,
+          }
+        }
+      });
+
+      if (authError) throw authError;
+
+      // Profile will be created automatically via trigger
+
       return { success: true };
     } catch (error) {
-      const errorMessage = error.response?.data?.detail || 'Signup failed';
+      const errorMessage = error.message || 'Signup failed';
       setError(errorMessage);
       return { success: false, error: errorMessage };
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('loginError'); // Clear any stored errors
+  const logout = async () => {
+    await supabase.auth.signOut();
     setUser(null);
     setError(null);
-    // Note: Favorites are now stored in the database and persist across sessions
   };
 
   const clearError = () => {
     setError(null);
-  };
-
-  const clearErrorWithDelay = () => {
-    setTimeout(() => {
-      setError(null);
-    }, 5000); // Clear error after 5 seconds
-  };
-
-  const clearAllUserData = () => {
-    localStorage.removeItem('token');
-    setUser(null);
-    setError(null);
-    // Note: Favorites are stored in the database and persist across sessions
   };
 
   const value = {
@@ -108,8 +140,6 @@ export const AuthProvider = ({ children }) => {
     signup,
     logout,
     clearError,
-    clearErrorWithDelay,
-    clearAllUserData,
     isAuthenticated: !!user,
     isAdmin: user?.role === 'admin',
   };
