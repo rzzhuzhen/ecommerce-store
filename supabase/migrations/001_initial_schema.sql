@@ -252,35 +252,8 @@ INSERT INTO storage.buckets (id, name, public)
 VALUES ('product-images', 'product-images', true)
 ON CONFLICT (id) DO NOTHING;
 
--- RLS for storage
-ALTER STORAGE BUCKETS ENABLE ROW LEVEL SECURITY;
-
--- Everyone can view product images
-CREATE POLICY "Anyone can view product images"
-    ON storage.objects FOR SELECT
-    USING (bucket_id = 'product-images');
-
--- Admins can upload product images
-CREATE POLICY "Admins can upload product images"
-    ON storage.objects FOR INSERT
-    WITH CHECK (
-        bucket_id = 'product-images' AND
-        EXISTS (
-            SELECT 1 FROM public.profiles
-            WHERE id = auth.uid() AND role = 'admin'
-        )
-    );
-
--- Admins can delete product images
-CREATE POLICY "Admins can delete product images"
-    ON storage.objects FOR DELETE
-    USING (
-        bucket_id = 'product-images' AND
-        EXISTS (
-            SELECT 1 FROM public.profiles
-            WHERE id = auth.uid() AND role = 'admin'
-        )
-    );
+-- Note: Storage bucket policies should be configured via Supabase Dashboard
+-- or storage API, not via SQL. The bucket 'product-images' is created above.
 
 -- ============================================
 -- HELPER FUNCTIONS
