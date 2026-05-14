@@ -22,6 +22,21 @@ const Header = () => {
     }
   }, [location.pathname, searchParams]);
 
+  // Close account dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (!e.target.closest('.account-dropdown')) {
+        setIsAccountOpen(false);
+      }
+    };
+    if (isAccountOpen) {
+      document.addEventListener('click', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [isAccountOpen]);
+
   const handleSearch = (e) => {
     e.preventDefault();
     const trimmedQuery = searchQuery.trim();
@@ -157,7 +172,7 @@ const Header = () => {
             </Link>
 
             {user ? (
-              <div className="relative">
+              <div className="relative account-dropdown">
                 <button
                   onClick={() => setIsAccountOpen(!isAccountOpen)}
                   className="flex items-center space-x-2 p-2 text-gray-600 hover:text-primary-600 transition-colors rounded-lg hover:bg-gray-50"
