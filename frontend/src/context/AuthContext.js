@@ -114,7 +114,7 @@ export const AuthProvider = ({ children }) => {
         password: userData.password,
         options: {
           data: {
-            full_name: `${userData.firstName} ${userData.lastName}`,
+            full_name: `${userData.first_name} ${userData.last_name}`,
           }
         }
       });
