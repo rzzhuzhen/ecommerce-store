@@ -61,14 +61,14 @@ const Home = () => {
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
                   to="/products"
-                  className="btn-accent text-lg px-8 py-3 inline-flex items-center space-x-2"
+                  className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-semibold text-lg px-8 py-3 inline-flex items-center justify-center space-x-2 rounded-lg shadow-md"
                 >
                   <span>立即购物</span>
                   <ArrowRight size={20} />
                 </Link>
                 <Link
                   to="/products"
-                  className="btn-secondary text-lg px-8 py-3 border-white text-white hover:bg-white hover:text-primary-600"
+                  className="bg-white hover:bg-gray-100 text-gray-800 font-semibold text-lg px-8 py-3 inline-flex items-center justify-center rounded-lg shadow-md border border-gray-300"
                 >
                   浏览分类
                 </Link>
@@ -183,7 +183,7 @@ const Home = () => {
             </Link>
             <Link
               to="/signup"
-              className="btn-secondary text-lg px-8 py-3 border-white text-white hover:bg-white hover:text-secondary-800"
+              className="bg-white hover:bg-gray-100 text-gray-800 font-semibold text-lg px-8 py-3 inline-flex items-center justify-center rounded-lg shadow-md border border-gray-300"
             >
               创建账户
             </Link>

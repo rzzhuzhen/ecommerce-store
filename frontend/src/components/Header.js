@@ -178,7 +178,7 @@ const Header = () => {
                   className="flex items-center space-x-2 p-2 text-gray-600 hover:text-primary-600 transition-colors rounded-lg hover:bg-gray-50"
                 >
                   <User size={20} />
-                  <span className="hidden sm:block">{user.email?.split('@')[0]}</span>
+                  <span className="hidden sm:block">{user.user_metadata?.full_name || user.email?.split('@')[0]}</span>
                   <ChevronDown size={16} />
                 </button>
 
