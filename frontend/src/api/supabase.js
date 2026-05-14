@@ -138,6 +138,28 @@ export const cartService = {
   },
 };
 
+// Profile queries (admin)
+export const profileService = {
+  getAll: async () => {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    return data;
+  },
+
+  updateRole: async (id, role) => {
+    const { data, error } = await supabase
+      .from('profiles')
+      .update({ role, updated_at: new Date().toISOString() })
+      .eq('id', id)
+      .single();
+    if (error) throw error;
+    return data;
+  },
+};
+
 // Order queries
 export const orderService = {
   create: async (orderData) => {
@@ -158,7 +180,6 @@ export const orderService = {
     const shipping = subtotal > 100 ? 0 : 10;
     const total = subtotal + tax + shipping;
 
-    // Create order
     const { data: order, error: orderError } = await supabase
       .from('orders')
       .insert({
@@ -172,7 +193,6 @@ export const orderService = {
       });
     if (orderError) throw orderError;
 
-    // Create order items
     const orderItems = cartItems.map(item => ({
       order_id: order.id,
       product_id: item.product_id,
@@ -188,7 +208,6 @@ export const orderService = {
       .insert(orderItems);
     if (itemsError) throw itemsError;
 
-    // Clear cart
     await cartService.clear();
 
     return order;
@@ -215,6 +234,60 @@ export const orderService = {
       .single();
     if (error) throw error;
     return data;
+  },
+
+  getAllOrders: async () => {
+    const { data, error } = await supabase
+      .from('orders')
+      .select('*, profiles(full_name, email), order_items(*)')
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    return data;
+  },
+
+  updateStatus: async (orderId, status) => {
+    const { data, error } = await supabase
+      .from('orders')
+      .update({ status, updated_at: new Date().toISOString() })
+      .eq('id', orderId)
+      .single();
+    if (error) throw error;
+    return data;
+  },
+
+  getSalesStats: async () => {
+    const { data, error } = await supabase
+      .from('orders')
+      .select('total, created_at, status');
+    if (error) throw error;
+
+    const stats = {
+      total_revenue: 0,
+      total_orders: 0,
+      completed_orders: 0,
+      pending_orders: 0,
+      monthly_data: {},
+    };
+
+    data.forEach(order => {
+      if (order.status === 'delivered' || order.status === 'completed') {
+        stats.total_revenue += parseFloat(order.total || 0);
+        stats.completed_orders++;
+      }
+      if (order.status === 'pending' || order.status === 'processing') {
+        stats.pending_orders++;
+      }
+      stats.total_orders++;
+
+      const month = new Date(order.created_at).toISOString().slice(0, 7);
+      if (!stats.monthly_data[month]) {
+        stats.monthly_data[month] = { revenue: 0, count: 0 };
+      }
+      stats.monthly_data[month].revenue += parseFloat(order.total || 0);
+      stats.monthly_data[month].count++;
+    });
+
+    return stats;
   },
 };
 
