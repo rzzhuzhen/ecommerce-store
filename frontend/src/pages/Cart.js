@@ -139,7 +139,7 @@ const Cart = () => {
                 </div>
                 {shipping > 0 && (
                   <div className="text-xs text-primary-600">
-                    再消费 ¥{(50 - cartTotal).toFixed(2)} 即可享受免费配送
+                    再消费 ${(50 - cartTotal).toFixed(2)} 即可享受免费配送
                   </div>
                 )}
                 <div className="border-t border-gray-200 pt-3">

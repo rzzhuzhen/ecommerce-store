@@ -73,7 +73,7 @@ const Favorites = () => {
     setIsAdding(prev => ({ ...prev, [product.id]: true }));
     try {
       await addToCart(product.id, 1);
-      addToast(`¥{product.name} 已添加到购物车！`, 'success');
+      addToast(`${product.name} 已添加到购物车！`, 'success');
     } catch (error) {
       console.error('Failed to add to cart:', error);
       addToast('添加到购物车失败', 'error');
@@ -126,7 +126,7 @@ const Favorites = () => {
           {favoriteProducts.map((product) => (
             <div key={product.id} className="product-card group">
               <div className="relative overflow-hidden bg-gray-100">
-                <Link to={`/products/¥{product.id}`}>
+                <Link to={`/products/${product.id}`}>
                   {product.image_url && !failedImages.has(product.id) ? (
                     <img
                       src={product.image_url}
@@ -168,7 +168,7 @@ const Favorites = () => {
                   {product.category}
                 </div>
 
-                <Link to={`/products/¥{product.id}`}>
+                <Link to={`/products/${product.id}`}>
                   <h3 className="font-medium text-gray-900 mb-2 line-clamp-2 hover:text-primary-600 transition-colors">
                     {product.name}
                   </h3>
@@ -181,7 +181,7 @@ const Favorites = () => {
                         <Star
                           key={i}
                           size={14}
-                          className={`¥{
+                          className={`${
                             i < Math.floor(product.rating)
                               ? 'text-yellow-400 fill-current'
                               : 'text-gray-300'
@@ -201,7 +201,7 @@ const Favorites = () => {
                 <button
                   onClick={() => handleAddToCart(product)}
                   disabled={isAdding[product.id] || product.stock === 0}
-                  className={`w-full flex items-center justify-center space-x-2 py-2 px-4 rounded-lg font-medium transition-all duration-200 ¥{
+                  className={`w-full flex items-center justify-center space-x-2 py-2 px-4 rounded-lg font-medium transition-all duration-200 ${
                     product.stock === 0
                       ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                       : 'bg-primary-600 hover:bg-primary-700 text-white hover:shadow-medium'

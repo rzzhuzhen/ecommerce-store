@@ -35,7 +35,7 @@ const Orders = () => {
 
     const config = statusConfig[status] || statusConfig.pending;
     return (
-      <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ¥{config.color}`}>
+      <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${config.color}`}>
         {config.label}
       </span>
     );
