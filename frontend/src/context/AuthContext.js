@@ -29,6 +29,7 @@ export const AuthProvider = ({ children }) => {
             id: session.user.id,
             email: session.user.email,
             role: session.user.user_metadata?.role || 'customer',
+            full_name: session.user.user_metadata?.full_name,
           });
         } else {
           setUser(null);
@@ -55,6 +56,7 @@ export const AuthProvider = ({ children }) => {
           id: session.user.id,
           email: session.user.email,
           role: profile?.role || 'customer',
+          full_name: session.user.user_metadata?.full_name,
         });
       }
     } catch (error) {
@@ -95,6 +97,7 @@ export const AuthProvider = ({ children }) => {
         id: data.user.id,
         email: data.user.email,
         role: profile?.role || 'customer',
+        full_name: data.user.user_metadata?.full_name,
       });
 
       return { success: true };
