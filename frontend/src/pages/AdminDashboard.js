@@ -230,7 +230,7 @@ const AdminDashboard = () => {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">价格 ($)</label>
+                <label className="block text-sm font-medium text-gray-700">价格 (¥)</label>
                 <input type="number" step="0.01" value={editProduct.price} onChange={e => setEditProduct(p => ({ ...p, price: e.target.value }))}
                   className="input-field mt-1" required />
               </div>
@@ -368,7 +368,7 @@ const AdminDashboard = () => {
                     </td>
                     <td className="px-4 py-2 text-sm text-gray-900">{product.name}</td>
                     <td className="px-4 py-2 text-sm text-gray-600">{product.category || '-'}</td>
-                    <td className="px-4 py-2 text-sm text-gray-900">${product.price?.toFixed(2)}</td>
+                    <td className="px-4 py-2 text-sm text-gray-900">¥{product.price?.toFixed(2)}</td>
                     <td className="px-4 py-2 text-sm">
                       <span className={product.stock <= 10 ? 'text-red-600 font-medium' : 'text-gray-900'}>
                         {product.stock}
