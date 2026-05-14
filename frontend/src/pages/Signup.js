@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { createClient } from '../utils/supabase';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +13,26 @@ const Signup = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [resendLoading, setResendLoading] = useState(false);
+  const supabase = createClient();
+
+  const handleResendConfirmation = async () => {
+    if (!formData.email) return;
+    setResendLoading(true);
+    try {
+      const { error: resendError } = await supabase.auth.resend({
+        type: 'signup',
+        email: formData.email
+      });
+      if (resendError) throw resendError;
+      setSuccessMessage('Confirmation email resent! Please check your inbox.');
+    } catch (err) {
+      setError(err.message || 'Failed to resend confirmation email');
+    } finally {
+      setResendLoading(false);
+    }
+  };
   
   const { signup } = useAuth();
   const navigate = useNavigate();
@@ -48,7 +69,13 @@ const Signup = () => {
       });
       
       if (result.success) {
-        navigate('/');
+        if (result.needsConfirmation) {
+          setSuccessMessage(result.message);
+          setError('');
+          setFormData({ firstName: '', lastName: '', email: '', password: '', confirmPassword: '' });
+        } else {
+          navigate('/');
+        }
       } else {
         setError(result.error || 'Signup failed');
       }
@@ -85,6 +112,20 @@ const Signup = () => {
             {error && (
               <div className="bg-accent-50 border border-accent-200 text-accent-800 px-4 py-3 rounded-lg">
                 {error}
+              </div>
+            )}
+
+            {successMessage && (
+              <div className="bg-success-50 border border-success-200 text-success-800 px-4 py-3 rounded-lg">
+                <p className="mb-2">{successMessage}</p>
+                <button
+                  type="button"
+                  onClick={handleResendConfirmation}
+                  disabled={resendLoading}
+                  className="text-sm font-medium text-primary-600 hover:text-primary-500 underline"
+                >
+                  {resendLoading ? 'Sending...' : 'Resend confirmation email'}
+                </button>
               </div>
             )}
 

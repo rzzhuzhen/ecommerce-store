@@ -75,6 +75,15 @@ export const AuthProvider = ({ children }) => {
 
       if (authError) throw authError;
 
+      // Check email confirmation
+      if (!data.user.email_confirmed_at) {
+        await supabase.auth.signOut();
+        return {
+          success: false,
+          error: 'Please confirm your email address. Check your inbox for the confirmation link.'
+        };
+      }
+
       // Get profile for role
       const { data: profile } = await supabase
         .from('profiles')
@@ -111,6 +120,15 @@ export const AuthProvider = ({ children }) => {
       });
 
       if (authError) throw authError;
+
+      // If email confirmation is enabled, show message
+      if (!data.user?.email_confirmed_at) {
+        return {
+          success: true,
+          needsConfirmation: true,
+          message: 'Please check your email and click the confirmation link to activate your account.'
+        };
+      }
 
       // Profile will be created automatically via trigger
 

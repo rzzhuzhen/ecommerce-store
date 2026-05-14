@@ -103,10 +103,19 @@ export const cartService = {
   update: async (cartItemId, quantity) => {
     const { data, error } = await supabase
       .from('cart_items')
-      .update({ quantity, subtotal: 0 }) // TODO: recalculate subtotal
-      .eq('id', cartItemId);
+      .select('price')
+      .eq('id', cartItemId)
+      .single();
     if (error) throw error;
-    return data;
+
+    const subtotal = data.price * quantity;
+
+    const { data: result, error: updateError } = await supabase
+      .from('cart_items')
+      .update({ quantity, subtotal })
+      .eq('id', cartItemId);
+    if (updateError) throw updateError;
+    return result;
   },
 
   remove: async (cartItemId) => {
@@ -206,6 +215,41 @@ export const orderService = {
       .single();
     if (error) throw error;
     return data;
+  },
+};
+
+// Storage service
+export const storageService = {
+  uploadProductImage: async (file, userId) => {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${userId}/${Date.now()}.${fileExt}`;
+    const filePath = `product-images/${fileName}`;
+
+    const { data, error } = await supabase.storage
+      .from('product-images')
+      .upload(fileName, file, {
+        cacheControl: '3600',
+        upsert: false,
+      });
+
+    if (error) throw error;
+
+    const { data: { publicUrl } } = supabase.storage
+      .from('product-images')
+      .getPublicUrl(fileName);
+
+    return publicUrl;
+  },
+
+  deleteProductImage: async (url) => {
+    const fileName = url.split('/product-images/')[1];
+    if (!fileName) return;
+
+    const { error } = await supabase.storage
+      .from('product-images')
+      .remove([fileName]);
+
+    if (error) console.error('Failed to delete image:', error);
   },
 };
 
