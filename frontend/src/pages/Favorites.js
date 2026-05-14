@@ -65,7 +65,7 @@ const Favorites = () => {
 
   const handleAddToCart = async (product) => {
     if (!isAuthenticated) {
-      addToast('Please sign in to add to cart', 'warning');
+      addToast('请先登录以添加到购物车', 'warning');
       window.location.href = '/login';
       return;
     }
@@ -73,10 +73,10 @@ const Favorites = () => {
     setIsAdding(prev => ({ ...prev, [product.id]: true }));
     try {
       await addToCart(product.id, 1);
-      addToast(`${product.name} added to cart!`, 'success');
+      addToast(`${product.name} 已添加到购物车！`, 'success');
     } catch (error) {
       console.error('Failed to add to cart:', error);
-      addToast('Failed to add to cart', 'error');
+      addToast('添加到购物车失败', 'error');
     } finally {
       setIsAdding(prev => ({ ...prev, [product.id]: false }));
     }
@@ -102,10 +102,10 @@ const Favorites = () => {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <Heart size={64} className="mx-auto text-gray-400 mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">No favorites yet</h2>
-          <p className="text-gray-600 mb-6">Start adding products to your favorites!</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">暂无收藏</h2>
+          <p className="text-gray-600 mb-6">开始添加商品到收藏夹吧！</p>
           <Link to="/products" className="btn-primary">
-            Browse Products
+            浏览商品
           </Link>
         </div>
       </div>
@@ -116,9 +116,9 @@ const Favorites = () => {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">My Favorites</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">我的收藏</h1>
           <p className="text-gray-600">
-            {favoriteProducts.length} favorite product{favoriteProducts.length !== 1 ? 's' : ''}
+            {favoriteProducts.length} 个收藏商品
           </p>
         </div>
 
@@ -146,19 +146,19 @@ const Favorites = () => {
                 <button
                   onClick={() => handleToggleFavorite(product.id)}
                   className="absolute top-2 right-2 p-2 bg-red-500 rounded-full shadow-soft opacity-0 group-hover:opacity-100 transition-all duration-200 hover:bg-red-600"
-                  title="Remove from favorites"
+                  title="取消收藏"
                 >
                   <Heart size={16} className="text-white fill-current" />
                 </button>
 
                 {product.stock <= 10 && product.stock > 0 && (
                   <span className="absolute top-2 left-2 badge badge-warning">
-                    Low Stock
+                    库存不足
                   </span>
                 )}
                 {product.stock === 0 && (
                   <span className="absolute top-2 left-2 badge badge-error">
-                    Out of Stock
+                    缺货
                   </span>
                 )}
               </div>
@@ -210,13 +210,13 @@ const Favorites = () => {
                   {isAdding[product.id] ? (
                     <>
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      <span>Adding...</span>
+                      <span>添加中...</span>
                     </>
                   ) : (
                     <>
                       <ShoppingCart size={16} />
                       <span>
-                        {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+                        {product.stock === 0 ? '缺货' : '加入购物车'}
                       </span>
                     </>
                   )}

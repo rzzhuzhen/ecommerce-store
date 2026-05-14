@@ -58,7 +58,7 @@ const ProductDetail = () => {
 
   const handleToggleFavorite = async () => {
     if (!isAuthenticated) {
-      addToast('Please sign in to add favorites', 'warning');
+      addToast('请先登录以添加收藏', 'warning');
       navigate('/login');
       return;
     }
@@ -80,7 +80,7 @@ const ProductDetail = () => {
 
   const handleAddToCart = async () => {
     if (!isAuthenticated) {
-      addToast('Please sign in to add to cart', 'warning');
+      addToast('请先登录以添加到购物车', 'warning');
       navigate('/login');
       return;
     }
@@ -88,10 +88,10 @@ const ProductDetail = () => {
     setAddingToCart(true);
     try {
       await addToCart(id, quantity);
-      addToast(`${product.name} added to cart!`, 'success');
+      addToast(`${product.name} 已添加到购物车！`, 'success');
     } catch (error) {
       console.error('Failed to add to cart:', error);
-      addToast('Failed to add to cart', 'error');
+      addToast('添加到购物车失败', 'error');
     } finally {
       setAddingToCart(false);
     }
@@ -116,9 +116,9 @@ const ProductDetail = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Product not found</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">未找到商品</h2>
           <button onClick={() => navigate('/products')} className="btn-primary">
-            Back to Products
+            返回商品列表
           </button>
         </div>
       </div>
@@ -133,7 +133,7 @@ const ProductDetail = () => {
           className="flex items-center space-x-2 text-gray-600 hover:text-primary-600 transition-colors mb-6"
         >
           <ArrowLeft size={20} />
-          <span>Back to Products</span>
+          <span>返回商品列表</span>
         </button>
 
         <div className="grid lg:grid-cols-2 gap-12">
@@ -188,12 +188,12 @@ const ProductDetail = () => {
               <p className="text-gray-700 leading-relaxed">{product.description}</p>
 
               <div className="flex items-center space-x-4">
-                <span className="text-sm text-gray-600">Stock:</span>
+                <span className="text-sm text-gray-600">库存:</span>
                 <span className={`font-medium ${
                   product.stock > 10 ? 'text-green-600' :
                   product.stock > 0 ? 'text-yellow-600' : 'text-red-600'
                 }`}>
-                  {product.stock > 0 ? `${product.stock} available` : 'Out of Stock'}
+                  {product.stock > 0 ? `${product.stock} 有货` : '缺货'}
                 </span>
               </div>
             </div>
@@ -202,7 +202,7 @@ const ProductDetail = () => {
               <div className="space-y-4">
                 <div className="flex items-center space-x-4">
                   <label htmlFor="quantity" className="text-sm font-medium text-gray-700">
-                    Quantity:
+                    数量:
                   </label>
                   <select
                     id="quantity"
@@ -227,12 +227,12 @@ const ProductDetail = () => {
                     {addingToCart ? (
                       <>
                         <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                        <span>Adding...</span>
+                        <span>添加中...</span>
                       </>
                     ) : (
                       <>
                         <ShoppingCart size={20} />
-                        <span>Add to Cart</span>
+                        <span>加入购物车</span>
                       </>
                     )}
                   </button>
@@ -245,7 +245,7 @@ const ProductDetail = () => {
                           ? 'border-red-500 bg-red-50 text-red-600 hover:bg-red-100'
                           : 'border-gray-300 text-gray-600 hover:bg-gray-50'
                       }`}
-                      title={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
+                      title={isFavorited ? '取消收藏' : '添加收藏'}
                     >
                       <Heart
                         size={20}
@@ -259,7 +259,7 @@ const ProductDetail = () => {
 
             {product.stock === 0 && (
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                <p className="text-gray-600 text-center">This product is currently out of stock</p>
+                <p className="text-gray-600 text-center">此商品目前缺货</p>
               </div>
             )}
           </div>

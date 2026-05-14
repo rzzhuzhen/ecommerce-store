@@ -23,9 +23,9 @@ const ForgotPassword = () => {
 
       if (resetError) throw resetError;
 
-      setMessage('Password reset instructions have been sent to your email address.');
+      setMessage('密码重置链接已发送至您的邮箱。');
     } catch (err) {
-      setError(err.message || 'Failed to send password reset email. Please try again.');
+      setError(err.message || '发送密码重置邮件失败，请重试。');
     } finally {
       setLoading(false);
     }
@@ -40,10 +40,10 @@ const ForgotPassword = () => {
           </div>
         </div>
         <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
-          Forgot your password?
+          忘记密码？
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
-          Enter your email address and we'll send you instructions to reset your password.
+          输入您的邮箱地址，我们将向您发送重置密码的说明。
         </p>
       </div>
 
@@ -58,7 +58,7 @@ const ForgotPassword = () => {
                   </svg>
                 </div>
                 <div className="ml-3">
-                  <h3 className="text-sm font-medium text-red-800">Error</h3>
+                  <h3 className="text-sm font-medium text-red-800">错误</h3>
                   <p className="text-sm text-red-700 mt-1">{error}</p>
                 </div>
               </div>
@@ -74,7 +74,7 @@ const ForgotPassword = () => {
                   </svg>
                 </div>
                 <div className="ml-3">
-                  <h3 className="text-sm font-medium text-green-800">Success</h3>
+                  <h3 className="text-sm font-medium text-green-800">成功</h3>
                   <p className="text-sm text-green-700 mt-1">{message}</p>
                 </div>
               </div>
@@ -84,7 +84,7 @@ const ForgotPassword = () => {
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email address
+                邮箱地址
               </label>
               <div className="mt-1">
                 <input
@@ -96,7 +96,7 @@ const ForgotPassword = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="input-field"
-                  placeholder="Enter your email address"
+                  placeholder="输入您的邮箱地址"
                 />
               </div>
             </div>
@@ -107,16 +107,16 @@ const ForgotPassword = () => {
                 disabled={loading}
                 className="w-full btn-primary py-3 text-lg font-medium"
               >
-                {loading ? 'Sending...' : 'Send Reset Instructions'}
+                {loading ? '发送中...' : '发送重置链接'}
               </button>
             </div>
           </form>
 
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
-              Remember your password?{' '}
+              记得密码？{' '}
               <Link to="/login" className="font-medium text-primary-600 hover:text-primary-500">
-                Sign in
+                去登录
               </Link>
             </p>
           </div>

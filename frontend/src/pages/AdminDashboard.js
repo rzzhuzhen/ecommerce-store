@@ -74,10 +74,10 @@ const AdminDashboard = () => {
       const { data: { user } } = await supabase.auth.getUser();
       const imageUrl = await storageService.uploadProductImage(file, user.id);
       setEditProduct(prev => ({ ...prev, image_url: imageUrl }));
-      setSuccess('Image uploaded successfully!');
+      setSuccess('图片上传成功！');
       setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
-      setError('Failed to upload image: ' + err.message);
+      setError('图片上传失败: ' + err.message);
       setTimeout(() => setError(''), 3000);
     }
   };
@@ -100,7 +100,7 @@ const AdminDashboard = () => {
           })
           .eq('id', editProduct.id);
         if (error) throw error;
-        setSuccess('Product updated successfully!');
+        setSuccess('商品更新成功！');
       } else {
         const { error } = await supabase
           .from('products')
@@ -113,7 +113,7 @@ const AdminDashboard = () => {
             stock: parseInt(editProduct.stock),
           });
         if (error) throw error;
-        setSuccess('Product created successfully!');
+        setSuccess('商品创建成功！');
       }
       setEditProduct({ id: null, name: '', description: '', price: 0, category: '', image_url: '', stock: 0, rating: 0, is_featured: false });
       await loadData();
@@ -127,14 +127,14 @@ const AdminDashboard = () => {
 
   const handleDeleteProduct = async (id) => {
     // eslint-disable-next-line no-restricted-globals
-    if (!confirm('Are you sure you want to delete this product?')) return;
+    if (!confirm('确定要删除此商品吗？')) return;
     try {
       const { error } = await supabase.from('products').delete().eq('id', id);
       if (error) throw error;
-      setSuccess('Product deleted successfully!');
+      setSuccess('商品删除成功！');
       await loadData();
     } catch (err) {
-      setError('Failed to delete product: ' + err.message);
+      setError('删除商品失败: ' + err.message);
     }
     setTimeout(() => setSuccess(''), 3000);
   };
@@ -163,8 +163,8 @@ const AdminDashboard = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Please sign in</h2>
-          <p className="text-gray-600 mb-6">You need to be signed in to access the admin dashboard</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">请先登录</h2>
+          <p className="text-gray-600 mb-6">登录后才能访问管理后台</p>
         </div>
       </div>
     );
@@ -174,8 +174,8 @@ const AdminDashboard = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Access Denied</h2>
-          <p className="text-gray-600 mb-6">You don't have permission to access the admin dashboard</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">访问被拒绝</h2>
+          <p className="text-gray-600 mb-6">您没有权限访问管理后台</p>
         </div>
       </div>
     );
@@ -195,10 +195,10 @@ const AdminDashboard = () => {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-2xl font-bold text-gray-900">
-              {editProduct.id ? 'Edit Product' : 'Add New Product'}
+              {editProduct.id ? '编辑商品' : '添加新商品'}
             </h1>
             <button onClick={() => setView('dashboard')} className="text-gray-600 hover:text-gray-900">
-              ← Back to Dashboard
+              ← 返回管理后台
             </button>
           </div>
 
@@ -208,63 +208,63 @@ const AdminDashboard = () => {
           <div className="bg-white rounded-lg shadow-soft p-6 space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Product Name</label>
+                <label className="block text-sm font-medium text-gray-700">商品名称</label>
                 <input type="text" value={editProduct.name} onChange={e => setEditProduct(p => ({ ...p, name: e.target.value }))}
                   className="input-field mt-1" required />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Category</label>
+                <label className="block text-sm font-medium text-gray-700">分类</label>
                 <select value={editProduct.category} onChange={e => setEditProduct(p => ({ ...p, category: e.target.value }))}
                   className="input-field mt-1">
-                  <option value="">Select category</option>
+                  <option value="">选择分类</option>
                   {categories.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Description</label>
+              <label className="block text-sm font-medium text-gray-700">商品描述</label>
               <textarea value={editProduct.description} onChange={e => setEditProduct(p => ({ ...p, description: e.target.value }))}
                 rows={3} className="input-field mt-1" />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Price ($)</label>
+                <label className="block text-sm font-medium text-gray-700">价格 ($)</label>
                 <input type="number" step="0.01" value={editProduct.price} onChange={e => setEditProduct(p => ({ ...p, price: e.target.value }))}
                   className="input-field mt-1" required />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Stock</label>
+                <label className="block text-sm font-medium text-gray-700">库存</label>
                 <input type="number" value={editProduct.stock} onChange={e => setEditProduct(p => ({ ...p, stock: e.target.value }))}
                   className="input-field mt-1" required />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Product Image</label>
+              <label className="block text-sm font-medium text-gray-700">商品图片</label>
               {editProduct.image_url && (
                 <div className="mt-2 mb-2">
-                  <img src={editProduct.image_url} alt="Preview" className="h-32 w-32 object-cover rounded" />
+                  <img src={editProduct.image_url} alt="预览" className="h-32 w-32 object-cover rounded" />
                 </div>
               )}
               <input type="file" accept="image/*" onChange={handleImageUpload} ref={fileInputRef} className="mt-1" />
-              <p className="text-xs text-gray-500 mt-1">Upload an image to set as product image</p>
+              <p className="text-xs text-gray-500 mt-1">上传图片以设置为商品图片</p>
             </div>
 
             <div className="flex items-center">
               <input type="checkbox" id="is_featured" checked={editProduct.is_featured}
                 onChange={e => setEditProduct(p => ({ ...p, is_featured: e.target.checked }))} className="mr-2" />
-              <label htmlFor="is_featured" className="text-sm font-medium text-gray-700">Featured Product</label>
+              <label htmlFor="is_featured" className="text-sm font-medium text-gray-700">精选商品</label>
             </div>
 
             <div className="flex gap-3">
               <button onClick={handleSaveProduct} disabled={saving}
                 className="btn-primary">
-                {saving ? 'Saving...' : 'Save Product'}
+                {saving ? '保存中...' : '保存商品'}
               </button>
               <button onClick={() => setView('dashboard')} className="btn-secondary">
-                Cancel
+                取消
               </button>
             </div>
           </div>
@@ -276,7 +276,7 @@ const AdminDashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Admin Dashboard</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">管理后台</h1>
 
         {error && <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg mb-4">{error}</div>}
         {success && <div className="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg mb-4">{success}</div>}
@@ -289,7 +289,7 @@ const AdminDashboard = () => {
                 <span className="text-2xl">📦</span>
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Total Products</p>
+                <p className="text-sm font-medium text-gray-600">商品总数</p>
                 <p className="text-2xl font-bold text-gray-900">{stats.total_products}</p>
               </div>
             </div>
@@ -301,7 +301,7 @@ const AdminDashboard = () => {
                 <span className="text-2xl">📋</span>
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Total Orders</p>
+                <p className="text-sm font-medium text-gray-600">订单总数</p>
                 <p className="text-2xl font-bold text-gray-900">{stats.total_orders}</p>
               </div>
             </div>
@@ -313,7 +313,7 @@ const AdminDashboard = () => {
                 <span className="text-2xl">💰</span>
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Total Revenue</p>
+                <p className="text-sm font-medium text-gray-600">总收入</p>
                 <p className="text-2xl font-bold text-gray-900">
                   ${stats.total_revenue.toFixed(2)}
                 </p>
@@ -327,7 +327,7 @@ const AdminDashboard = () => {
                 <span className="text-2xl">⏳</span>
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Pending Orders</p>
+                <p className="text-sm font-medium text-gray-600">待处理订单</p>
                 <p className="text-2xl font-bold text-gray-900">{stats.pending_orders}</p>
               </div>
             </div>
@@ -337,9 +337,9 @@ const AdminDashboard = () => {
         {/* Products Management */}
         <div className="bg-white rounded-lg shadow-soft p-6 mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-gray-900">Products</h2>
+            <h2 className="text-xl font-semibold text-gray-900">商品管理</h2>
             <button onClick={startCreate} className="btn-primary">
-              + Add Product
+              + 添加商品
             </button>
           </div>
 
@@ -347,13 +347,13 @@ const AdminDashboard = () => {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">Image</th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">Name</th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">Category</th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">Price</th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">Stock</th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">Featured</th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">Actions</th>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">图片</th>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">名称</th>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">分类</th>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">价格</th>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">库存</th>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">精选</th>
+                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">操作</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -377,10 +377,10 @@ const AdminDashboard = () => {
                     <td className="px-4 py-2 text-sm">{product.is_featured ? '✓' : '-'}</td>
                     <td className="px-4 py-2 text-sm">
                       <button onClick={() => startEdit(product)} className="text-primary-600 hover:text-primary-800 mr-3">
-                        Edit
+                        编辑
                       </button>
                       <button onClick={() => handleDeleteProduct(product.id)} className="text-red-600 hover:text-red-800">
-                        Delete
+                        删除
                       </button>
                     </td>
                   </tr>
@@ -399,10 +399,10 @@ const AdminDashboard = () => {
               </div>
               <div className="ml-3">
                 <h3 className="text-lg font-medium text-yellow-800">
-                  Low Stock Alert
+                  库存不足提醒
                 </h3>
                 <p className="text-yellow-700">
-                  You have {stats.low_stock_products} products with low stock that need attention.
+                  您有 {stats.low_stock_products} 个商品库存不足，需要关注。
                 </p>
               </div>
             </div>

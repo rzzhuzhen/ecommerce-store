@@ -169,11 +169,11 @@ const Products = () => {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">All Products</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">所有商品</h1>
           <p className="text-gray-600">
-            {totalProducts} products found
-            {searchQuery && ` for "${searchQuery}"`}
-            {selectedCategory && ` in ${selectedCategory}`}
+            共找到 {totalProducts} 个商品
+            {searchQuery && `，搜索 "${searchQuery}"`}
+            {selectedCategory && `，分类 "${selectedCategory}"`}
           </p>
         </div>
 
@@ -183,7 +183,7 @@ const Products = () => {
               <form onSubmit={handleSearch} className="relative">
                 <input
                   type="text"
-                  placeholder="Search products..."
+                  placeholder="搜索商品..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-4 pr-20 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
@@ -194,7 +194,7 @@ const Products = () => {
                       type="button"
                       onClick={clearSearch}
                       className="p-1 text-gray-400 hover:text-red-600 transition-colors"
-                      title="Clear search"
+                      title="清除搜索"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -204,7 +204,7 @@ const Products = () => {
                   <button
                     type="submit"
                     className="p-1 text-gray-400 hover:text-primary-600 transition-colors"
-                    title="Search"
+                    title="搜索"
                   >
                     <Search size={20} />
                   </button>
@@ -240,7 +240,7 @@ const Products = () => {
               className="btn-secondary inline-flex items-center space-x-2"
             >
               <Filter size={16} />
-              <span>Filters</span>
+              <span>筛选</span>
             </button>
           </div>
 
@@ -249,7 +249,7 @@ const Products = () => {
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Category
+                    分类
                   </label>
                   <select
                     value={selectedCategory}
@@ -259,7 +259,7 @@ const Products = () => {
                     }}
                     className="input-field"
                   >
-                    <option value="">All Categories</option>
+                    <option value="">所有分类</option>
                     {categories.map((category) => (
                       <option key={category.id} value={category.name}>
                         {category.name}
@@ -270,7 +270,7 @@ const Products = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Min Price
+                    最低价格
                   </label>
                   <input
                     type="number"
@@ -286,7 +286,7 @@ const Products = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Max Price
+                    最高价格
                   </label>
                   <input
                     type="number"
@@ -302,7 +302,7 @@ const Products = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Sort By
+                    排序方式
                   </label>
                   <select
                     value={`${sortBy}-${sortOrder}`}
@@ -314,11 +314,11 @@ const Products = () => {
                     }}
                     className="input-field"
                   >
-                    <option value="name-asc">Name A-Z</option>
-                    <option value="name-desc">Name Z-A</option>
-                    <option value="price-asc">Price Low to High</option>
-                    <option value="price-desc">Price High to Low</option>
-                    <option value="rating-desc">Highest Rated</option>
+                    <option value="name-asc">名称 A-Z</option>
+                    <option value="name-desc">名称 Z-A</option>
+                    <option value="price-asc">价格从低到高</option>
+                    <option value="price-desc">价格从高到低</option>
+                    <option value="rating-desc">评分最高</option>
                   </select>
                 </div>
               </div>
@@ -328,7 +328,7 @@ const Products = () => {
                   onClick={clearFilters}
                   className="text-primary-600 hover:text-primary-700 font-medium"
                 >
-                  Clear All Filters
+                  清除所有筛选
                 </button>
               </div>
             </div>
@@ -338,15 +338,15 @@ const Products = () => {
         {products.length === 0 ? (
           <div className="text-center py-16">
             <div className="text-gray-400 text-6xl mb-4">🔍</div>
-            <h3 className="text-xl font-medium text-gray-900 mb-2">No products found</h3>
+            <h3 className="text-xl font-medium text-gray-900 mb-2">未找到商品</h3>
             <p className="text-gray-600 mb-6">
-              Try adjusting your search or filter criteria
+              尝试调整搜索或筛选条件
             </p>
             <button
               onClick={clearFilters}
               className="btn-primary"
             >
-              Clear Filters
+              清除筛选
             </button>
           </div>
         ) : (

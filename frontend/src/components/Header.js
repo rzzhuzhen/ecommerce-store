@@ -105,7 +105,7 @@ const Header = () => {
               <span className="text-white font-bold text-lg">E</span>
             </div>
             <span className="text-xl font-bold text-gray-900 hidden sm:block">
-              E-commerce Store
+              电商商城
             </span>
           </Link>
 
@@ -114,7 +114,7 @@ const Header = () => {
               <div className="relative">
                 <input
                   type="text"
-                  placeholder="Search products..."
+                  placeholder="搜索商品..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-4 pr-20 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
@@ -125,7 +125,7 @@ const Header = () => {
                       type="button"
                       onClick={clearSearch}
                       className="p-1 text-gray-400 hover:text-red-600 transition-colors"
-                      title="Clear search"
+                      title="清除搜索"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -135,7 +135,7 @@ const Header = () => {
                   <button
                     type="submit"
                     className="p-1 text-gray-400 hover:text-primary-600 transition-colors"
-                    title="Search"
+                    title="搜索"
                   >
                     <Search size={20} />
                   </button>
@@ -189,7 +189,7 @@ const Header = () => {
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                       onClick={() => setIsAccountOpen(false)}
                     >
-                      My Orders
+                      我的订单
                     </Link>
                     {isAdmin && (
                       <Link
@@ -197,7 +197,7 @@ const Header = () => {
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                         onClick={() => setIsAccountOpen(false)}
                       >
-                        Admin Dashboard
+                        管理后台
                       </Link>
                     )}
                     <hr className="my-2" />
@@ -205,7 +205,7 @@ const Header = () => {
                       onClick={handleLogout}
                       className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                     >
-                      Sign Out
+                      退出登录
                     </button>
                   </div>
                 )}
@@ -216,14 +216,14 @@ const Header = () => {
                   to="/login"
                   className="text-gray-600 hover:text-primary-600 transition-colors font-medium"
                 >
-                  Sign In
+                  登录
                 </Link>
                 <span className="text-gray-300">|</span>
                 <Link
                   to="/signup"
                   className="btn-primary text-sm"
                 >
-                  Sign Up
+                  注册
                 </Link>
               </div>
             )}
@@ -243,7 +243,7 @@ const Header = () => {
               <div className="relative">
                 <input
                   type="text"
-                  placeholder="Search products..."
+                  placeholder="搜索商品..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-4 pr-20 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
@@ -254,7 +254,7 @@ const Header = () => {
                       type="button"
                       onClick={clearSearch}
                       className="p-1 text-gray-400 hover:text-red-600 transition-colors"
-                      title="Clear search"
+                      title="清除搜索"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -264,7 +264,7 @@ const Header = () => {
                   <button
                     type="submit"
                     className="p-1 text-gray-400 hover:text-primary-600 transition-colors"
-                    title="Search"
+                    title="搜索"
                   >
                     <Search size={20} />
                   </button>
@@ -282,7 +282,7 @@ const Header = () => {
                 className="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg"
                 onClick={() => setIsMenuOpen(false)}
               >
-                All Products
+                所有商品
               </Link>
               {isAuthenticated && (
                 <Link
@@ -290,7 +290,7 @@ const Header = () => {
                   className="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  My Favorites {favoritesCount > 0 && `(${favoritesCount})`}
+                  我的收藏 {favoritesCount > 0 && `(${favoritesCount})`}
                 </Link>
               )}
               <Link
@@ -298,7 +298,7 @@ const Header = () => {
                 className="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg"
                 onClick={() => setIsMenuOpen(false)}
               >
-                My Orders
+                我的订单
               </Link>
               {isAdmin && (
                 <Link
@@ -306,7 +306,7 @@ const Header = () => {
                   className="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Admin Dashboard
+                  管理后台
                 </Link>
               )}
             </div>

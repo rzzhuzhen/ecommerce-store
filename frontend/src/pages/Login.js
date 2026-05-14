@@ -8,7 +8,7 @@ const Login = () => {
     password: ''
   });
   const [loading, setLoading] = useState(false);
-  
+
   const { login, error, clearError } = useAuth();
   const navigate = useNavigate();
 
@@ -17,7 +17,7 @@ const Login = () => {
       ...formData,
       [e.target.name]: e.target.value
     });
-    
+
     // Clear error when user starts typing
     if (error) {
       clearError();
@@ -27,12 +27,12 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
+
     const result = await login(formData.email, formData.password);
     if (result.success) {
       navigate('/');
     }
-    
+
     setLoading(false);
   };
 
@@ -46,12 +46,12 @@ const Login = () => {
           </div>
         </div>
         <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
-          Sign in to your account
+          登录您的账户
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
-          Or{' '}
+          或者{' '}
           <Link to="/signup" className="font-medium text-primary-600 hover:text-primary-500">
-            create a new account
+            创建新账户
           </Link>
         </p>
       </div>
@@ -68,14 +68,14 @@ const Login = () => {
                     </svg>
                   </div>
                   <div className="ml-3">
-                    <h3 className="text-sm font-medium text-red-800">Login Failed</h3>
+                    <h3 className="text-sm font-medium text-red-800">登录失败</h3>
                     <p className="text-sm text-red-700 mt-1">{error}</p>
                   </div>
                 </div>
                 <button
                   onClick={clearError}
                   className="flex-shrink-0 ml-4 text-red-500 hover:text-red-700 transition-colors"
-                  title="Dismiss error"
+                  title="关闭"
                 >
                   <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -84,11 +84,11 @@ const Login = () => {
               </div>
             </div>
           )}
-          
+
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email address
+                邮箱地址
               </label>
               <div className="mt-1">
                 <input
@@ -106,7 +106,7 @@ const Login = () => {
 
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
+                密码
               </label>
               <div className="mt-1">
                 <input
@@ -131,13 +131,13 @@ const Login = () => {
                   className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                 />
                 <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                  Remember me
+                  记住我
                 </label>
               </div>
 
               <div className="text-sm">
                 <Link to="/forgot-password" className="font-medium text-primary-600 hover:text-primary-500">
-                  Forgot your password?
+                  忘记密码？
                 </Link>
               </div>
             </div>
@@ -148,7 +148,7 @@ const Login = () => {
                 disabled={loading}
                 className="w-full btn-primary py-3 text-lg font-medium"
               >
-                {loading ? 'Signing in...' : 'Sign in'}
+                {loading ? '登录中...' : '登录'}
               </button>
             </div>
           </form>

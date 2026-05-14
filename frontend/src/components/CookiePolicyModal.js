@@ -4,7 +4,7 @@ const CookiePolicyModal = ({ isOpen, onClose }) => {
   return (
     <div className={`fixed inset-0 z-50 overflow-y-auto ${isOpen ? 'block' : 'hidden'}`}>
       <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-        <div 
+        <div
           className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
           onClick={onClose}
         ></div>
@@ -17,7 +17,7 @@ const CookiePolicyModal = ({ isOpen, onClose }) => {
               <div className="mt-3 text-center sm:mt-0 sm:text-left w-full">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-lg leading-6 font-medium text-gray-900">
-                    Cookie Policy
+                    Cookie政策
                   </h3>
                   <button
                     onClick={onClose}
@@ -29,112 +29,112 @@ const CookiePolicyModal = ({ isOpen, onClose }) => {
                   </button>
                 </div>
                 <div className="mt-2 text-sm text-gray-600 space-y-4">
-                  <p className="text-xs text-gray-500">Last updated: {new Date().toLocaleDateString()}</p>
-                  
+                  <p className="text-xs text-gray-500">最后更新: {new Date().toLocaleDateString()}</p>
+
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">What Are Cookies?</h4>
-                    <p>Cookies are small text files that are placed on your computer or mobile device when you visit our website. They are widely used to make websites work more efficiently and to provide information to website owners.</p>
+                    <h4 className="font-semibold text-gray-900 mb-2">什么是Cookie？</h4>
+                    <p>Cookie是访问网站时放置在您计算机或移动设备上的小型文本文件。它们被广泛用于使网站更高效地工作，并为网站所有者提供信息。</p>
                   </div>
 
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">How We Use Cookies</h4>
-                    <p className="mb-2">We use cookies for several purposes:</p>
+                    <h4 className="font-semibold text-gray-900 mb-2">我们如何使用Cookie</h4>
+                    <p className="mb-2">我们出于多种目的使用Cookie：</p>
                     <ul className="list-disc list-inside space-y-1 ml-4">
-                      <li>To remember your preferences and settings</li>
-                      <li>To keep you signed in to your account</li>
-                      <li>To remember items in your shopping cart</li>
-                      <li>To analyze how our website is used</li>
-                      <li>To improve our website's performance and functionality</li>
-                      <li>To provide personalized content and advertisements</li>
+                      <li>记住您的偏好和设置</li>
+                      <li>保持您登录您的账户</li>
+                      <li>记住购物车中的商品</li>
+                      <li>分析我们网站的使用情况</li>
+                      <li>改进我们网站的性能和功能</li>
+                      <li>提供个性化内容和广告</li>
                     </ul>
                   </div>
 
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">Types of Cookies We Use</h4>
-                    
+                    <h4 className="font-semibold text-gray-900 mb-2">我们使用的Cookie类型</h4>
+
                     <div className="space-y-3">
                       <div>
-                        <h5 className="font-medium text-gray-900">Essential Cookies</h5>
-                        <p className="text-sm">These cookies are necessary for the website to function properly. They enable basic functions like page navigation, access to secure areas, and remembering your login status. The website cannot function properly without these cookies.</p>
+                        <h5 className="font-medium text-gray-900">必要Cookie</h5>
+                        <p className="text-sm">这些Cookie对于网站正常运行是必要的。它们启用页面导航、访问安全区域和记住登录状态等基本功能。没有这些Cookie，网站无法正常运行。</p>
                       </div>
 
                       <div>
-                        <h5 className="font-medium text-gray-900">Performance Cookies</h5>
-                        <p className="text-sm">These cookies collect information about how visitors use our website, such as which pages are visited most often. This helps us improve how our website works and provides a better user experience.</p>
+                        <h5 className="font-medium text-gray-900">性能Cookie</h5>
+                        <p className="text-sm">这些Cookie收集有关访问者如何使用我们网站的信息，例如最常访问哪些页面。这有助于我们改进网站的工作方式并提供更好的用户体验。</p>
                       </div>
 
                       <div>
-                        <h5 className="font-medium text-gray-900">Functionality Cookies</h5>
-                        <p className="text-sm">These cookies allow the website to remember choices you make (such as your username, language, or region) and provide enhanced, more personal features.</p>
+                        <h5 className="font-medium text-gray-900">功能Cookie</h5>
+                        <p className="text-sm">这些Cookie允许网站记住您做出的选择（如用户名、语言或地区）并提供增强的、更个性化的功能。</p>
                       </div>
 
                       <div>
-                        <h5 className="font-medium text-gray-900">Targeting/Advertising Cookies</h5>
-                        <p className="text-sm">These cookies are used to deliver advertisements more relevant to you and your interests. They may also be used to limit the number of times you see an advertisement and measure the effectiveness of advertising campaigns.</p>
+                        <h5 className="font-medium text-gray-900">定向/广告Cookie</h5>
+                        <p className="text-sm">这些Cookie用于向您投放更相关的广告。它们还可能用于限制您看到广告的次数并衡量广告活动的效果。</p>
                       </div>
                     </div>
                   </div>
 
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">Third-Party Cookies</h4>
-                    <p className="mb-2">We may also use third-party cookies from trusted partners for:</p>
+                    <h4 className="font-semibold text-gray-900 mb-2">第三方Cookie</h4>
+                    <p className="mb-2">我们也可能使用可信合作伙伴的第三方Cookie用于：</p>
                     <ul className="list-disc list-inside space-y-1 ml-4">
-                      <li>Analytics and performance monitoring</li>
-                      <li>Social media integration</li>
-                      <li>Payment processing</li>
-                      <li>Customer support tools</li>
-                      <li>Marketing and advertising</li>
+                      <li>分析和性能监控</li>
+                      <li>社交媒体集成</li>
+                      <li>支付处理</li>
+                      <li>客服工具</li>
+                      <li>营销和广告</li>
                     </ul>
                   </div>
 
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">Managing Cookies</h4>
-                    <p className="mb-2">You can control and manage cookies in several ways:</p>
+                    <h4 className="font-semibold text-gray-900 mb-2">管理Cookie</h4>
+                    <p className="mb-2">您可以通过多种方式控制和管理Cookie：</p>
                     <ul className="list-disc list-inside space-y-1 ml-4">
-                      <li>Through your browser settings (most browsers allow you to refuse or delete cookies)</li>
-                      <li>By using our cookie preference center (if available)</li>
-                      <li>By opting out of specific third-party cookies through their respective websites</li>
+                      <li>通过浏览器设置（大多数浏览器允许您拒绝或删除Cookie）</li>
+                      <li>通过使用我们的Cookie偏好中心（如果可用）</li>
+                      <li>通过在各自网站上选择退出特定第三方Cookie</li>
                     </ul>
-                    <p className="mt-2 text-sm">Please note that disabling certain cookies may affect the functionality of our website.</p>
+                    <p className="mt-2 text-sm">请注意，禁用某些Cookie可能会影响我们网站的功能。</p>
                   </div>
 
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">Browser-Specific Instructions</h4>
+                    <h4 className="font-semibold text-gray-900 mb-2">特定浏览器说明</h4>
                     <div className="space-y-2">
-                      <p><strong>Chrome:</strong> Settings → Privacy and security → Cookies and other site data</p>
-                      <p><strong>Firefox:</strong> Options → Privacy & Security → Cookies and Site Data</p>
-                      <p><strong>Safari:</strong> Preferences → Privacy → Manage Website Data</p>
-                      <p><strong>Edge:</strong> Settings → Cookies and site permissions → Cookies and site data</p>
+                      <p><strong>Chrome:</strong> 设置 → 隐私和安全 → Cookie和其他站点数据</p>
+                      <p><strong>Firefox:</strong> 选项 → 隐私与安全 → Cookie和站点数据</p>
+                      <p><strong>Safari:</strong> 偏好设置 → 隐私 → 管理网站数据</p>
+                      <p><strong>Edge:</strong> 设置 → Cookie和站点权限 → Cookie和站点数据</p>
                     </div>
                   </div>
 
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">Cookie Retention</h4>
-                    <p>Cookies are typically stored for different periods depending on their purpose:</p>
+                    <h4 className="font-semibold text-gray-900 mb-2">Cookie保留期</h4>
+                    <p>Cookie的存储时间因目的而异：</p>
                     <ul className="list-disc list-inside space-y-1 ml-4 mt-2">
-                      <li>Session cookies: Deleted when you close your browser</li>
-                      <li>Persistent cookies: Remain on your device for a set period or until manually deleted</li>
-                      <li>Essential cookies: Usually retained for the duration of your session</li>
+                      <li>会话Cookie：关闭浏览器时删除</li>
+                      <li>持久Cookie：在您的设备上保留一段固定时间或直到手动删除</li>
+                      <li>必要Cookie：通常在会话期间保留</li>
                     </ul>
                   </div>
 
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">Updates to This Policy</h4>
-                    <p>We may update this Cookie Policy from time to time to reflect changes in our practices or for other operational, legal, or regulatory reasons. We will notify you of any material changes by posting the updated policy on our website.</p>
+                    <h4 className="font-semibold text-gray-900 mb-2">本政策更新</h4>
+                    <p>我们可能会不时更新本Cookie政策，以反映我们实践的变化或出于其他运营、法律或监管原因。我们将通过在我们的网站上发布更新后的政策来通知您任何重大变更。</p>
                   </div>
 
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">Contact Us</h4>
-                    <p>If you have any questions about our use of cookies, please contact us at:</p>
+                    <h4 className="font-semibold text-gray-900 mb-2">联系我们</h4>
+                    <p>如果您对我们的Cookie使用有任何疑问，请通过以下方式联系我们：</p>
                     <ul className="list-none space-y-1 ml-4 mt-2">
-                      <li>Email: dera.delis@gmail.com</li>
+                      <li>邮箱: dera.delis@gmail.com</li>
                       <li>WhatsApp: +234 704 907 3197</li>
                     </ul>
                   </div>
 
                   <div className="bg-blue-50 p-3 rounded-md">
                     <p className="text-blue-800 text-sm">
-                      <strong>Note:</strong> By continuing to use our website, you consent to our use of cookies as described in this policy. You can withdraw your consent at any time by adjusting your browser settings or contacting us.
+                      <strong>注意:</strong> 继续使用我们的网站，即表示您同意我们按照本政策中所述使用Cookie。您可以随时通过调整浏览器设置或联系我们来撤回您的同意。
                     </p>
                   </div>
                 </div>
@@ -147,7 +147,7 @@ const CookiePolicyModal = ({ isOpen, onClose }) => {
               onClick={onClose}
               className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-600 text-base font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:ml-3 sm:w-auto sm:text-sm"
             >
-              Close
+              关闭
             </button>
           </div>
         </div>

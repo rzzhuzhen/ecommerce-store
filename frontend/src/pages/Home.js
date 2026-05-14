@@ -30,10 +30,10 @@ const Home = () => {
   };
 
   const heroCategories = [
-    { name: 'Electronics', icon: '📱', color: 'bg-blue-500' },
-    { name: 'Fashion', icon: '👕', color: 'bg-pink-500' },
-    { name: 'Home & Garden', icon: '🏠', color: 'bg-green-500' },
-    { name: 'Sports', icon: '⚽', color: 'bg-orange-500' },
+    { name: '电子产品', icon: '📱', color: 'bg-blue-500' },
+    { name: '服装', icon: '👕', color: 'bg-pink-500' },
+    { name: '家居园艺', icon: '🏠', color: 'bg-green-500' },
+    { name: '运动', icon: '⚽', color: 'bg-orange-500' },
   ];
 
   if (loading) {
@@ -52,26 +52,25 @@ const Home = () => {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
               <h1 className="text-4xl md:text-6xl font-bold leading-tight">
-                Discover Amazing
-                <span className="block text-primary-200">Products</span>
+                发现惊喜商品
+                <span className="block text-primary-200">发现您喜爱的产品</span>
               </h1>
               <p className="text-xl text-primary-100 max-w-lg">
-                Shop the latest trends with our curated collection of high-quality products.
-                Fast shipping, great prices, and exceptional service.
+                浏览最新潮流商品，享受高品质产品。快速配送，实惠价格，优质服务。
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
                   to="/products"
                   className="btn-accent text-lg px-8 py-3 inline-flex items-center space-x-2"
                 >
-                  <span>Shop Now</span>
+                  <span>立即购物</span>
                   <ArrowRight size={20} />
                 </Link>
                 <Link
                   to="/products"
                   className="btn-secondary text-lg px-8 py-3 border-white text-white hover:bg-white hover:text-primary-600"
                 >
-                  Browse Categories
+                  浏览分类
                 </Link>
               </div>
             </div>
@@ -104,10 +103,10 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Shop by Category
+              浏览分类
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Explore our wide range of products organized by category for easy navigation
+              探索我们广泛的商品，按分类组织，方便浏览
             </p>
           </div>
 
@@ -143,17 +142,17 @@ const Home = () => {
           <div className="flex items-center justify-between mb-12">
             <div>
               <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Featured Products
+                精选商品
               </h2>
               <p className="text-lg text-gray-600">
-                Handpicked products that our customers love
+                精心挑选的热门商品
               </p>
             </div>
             <Link
               to="/products"
               className="btn-primary inline-flex items-center space-x-2"
             >
-              <span>View All</span>
+              <span>查看全部</span>
               <ArrowRight size={16} />
             </Link>
           </div>
@@ -170,23 +169,23 @@ const Home = () => {
       <section className="py-16 bg-gradient-to-r from-secondary-800 to-secondary-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold mb-4">
-            Ready to Start Shopping?
+            准备好开始购物了吗？
           </h2>
           <p className="text-xl text-secondary-200 mb-8 max-w-2xl mx-auto">
-            Join thousands of satisfied customers who trust us for quality products and exceptional service.
+            加入数千名满意顾客的行列，体验优质商品和卓越服务。
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/products"
               className="btn-accent text-lg px-8 py-3"
             >
-              Browse Products
+              浏览商品
             </Link>
             <Link
               to="/signup"
               className="btn-secondary text-lg px-8 py-3 border-white text-white hover:bg-white hover:text-secondary-800"
             >
-              Create Account
+              创建账户
             </Link>
           </div>
         </div>

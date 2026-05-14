@@ -72,7 +72,7 @@ const Checkout = () => {
       navigate('/orders');
     } catch (error) {
       console.error('Failed to create order:', error);
-      alert('Failed to create order. Please try again.');
+      alert('创建订单失败，请重试。');
     } finally {
       setLoading(false);
     }
@@ -82,9 +82,9 @@ const Checkout = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Your cart is empty</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">您的购物车是空的</h2>
           <button onClick={() => navigate('/products')} className="btn-primary">
-            Browse Products
+            浏览商品
           </button>
         </div>
       </div>
@@ -94,7 +94,7 @@ const Checkout = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Checkout</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">结账</h1>
 
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Checkout Form */}
@@ -102,13 +102,13 @@ const Checkout = () => {
             <form onSubmit={handleSubmit} className="space-y-6">
               {step === 1 && (
                 <div className="bg-white rounded-lg shadow-soft p-6">
-                  <h2 className="text-xl font-semibold text-gray-900 mb-4">Shipping Information</h2>
+                  <h2 className="text-xl font-semibold text-gray-900 mb-4">收货信息</h2>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <input
                       type="text"
                       name="firstName"
-                      placeholder="First Name *"
+                      placeholder="名 *"
                       value={formData.firstName}
                       onChange={handleInputChange}
                       required
@@ -117,7 +117,7 @@ const Checkout = () => {
                     <input
                       type="text"
                       name="lastName"
-                      placeholder="Last Name *"
+                      placeholder="姓 *"
                       value={formData.lastName}
                       onChange={handleInputChange}
                       required
@@ -126,7 +126,7 @@ const Checkout = () => {
                     <input
                       type="email"
                       name="email"
-                      placeholder="Email *"
+                      placeholder="邮箱 *"
                       value={formData.email}
                       onChange={handleInputChange}
                       required
@@ -135,7 +135,7 @@ const Checkout = () => {
                     <input
                       type="tel"
                       name="phone"
-                      placeholder="Phone *"
+                      placeholder="电话 *"
                       value={formData.phone}
                       onChange={handleInputChange}
                       required
@@ -144,7 +144,7 @@ const Checkout = () => {
                     <input
                       type="text"
                       name="address"
-                      placeholder="Address *"
+                      placeholder="地址 *"
                       value={formData.address}
                       onChange={handleInputChange}
                       required
@@ -153,7 +153,7 @@ const Checkout = () => {
                     <input
                       type="text"
                       name="city"
-                      placeholder="City *"
+                      placeholder="城市 *"
                       value={formData.city}
                       onChange={handleInputChange}
                       required
@@ -162,7 +162,7 @@ const Checkout = () => {
                     <input
                       type="text"
                       name="state"
-                      placeholder="State *"
+                      placeholder="州 *"
                       value={formData.state}
                       onChange={handleInputChange}
                       required
@@ -171,7 +171,7 @@ const Checkout = () => {
                     <input
                       type="text"
                       name="zipCode"
-                      placeholder="ZIP Code *"
+                      placeholder="邮政编码 *"
                       value={formData.zipCode}
                       onChange={handleInputChange}
                       required
@@ -183,20 +183,20 @@ const Checkout = () => {
 
               {step === 2 && (
                 <div className="bg-white rounded-lg shadow-soft p-6">
-                  <h2 className="text-xl font-semibold text-gray-900 mb-4">Payment Information</h2>
-                  <p className="text-gray-600 mb-4">This is a demo checkout. No real payment will be processed.</p>
+                  <h2 className="text-xl font-semibold text-gray-900 mb-4">支付信息</h2>
+                  <p className="text-gray-600 mb-4">这是演示结账，不进行真实支付。</p>
 
                   <div className="space-y-4">
                     <input
                       type="text"
-                      placeholder="Card Number"
+                      placeholder="卡号"
                       className="input-field"
                       disabled
                     />
                     <div className="grid grid-cols-3 gap-4">
                       <input
                         type="text"
-                        placeholder="MM/YY"
+                        placeholder="月/年"
                         className="input-field"
                         disabled
                       />
@@ -208,7 +208,7 @@ const Checkout = () => {
                       />
                       <input
                         type="text"
-                        placeholder="Cardholder Name"
+                        placeholder="持卡人姓名"
                         className="input-field"
                         disabled
                       />
@@ -224,7 +224,7 @@ const Checkout = () => {
                     onClick={() => setStep(step - 1)}
                     className="btn-secondary"
                   >
-                    Back
+                    返回
                   </button>
                 )}
 
@@ -233,7 +233,7 @@ const Checkout = () => {
                   disabled={loading}
                   className="btn-primary ml-auto"
                 >
-                  {loading ? 'Processing...' : step === 1 ? 'Continue to Payment' : 'Place Order'}
+                  {loading ? '处理中...' : step === 1 ? '继续支付' : '提交订单'}
                 </button>
               </div>
             </form>
@@ -242,7 +242,7 @@ const Checkout = () => {
           {/* Order Summary */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow-soft p-6 sticky top-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Order Summary</h2>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">订单摘要</h2>
 
               <div className="space-y-3 mb-6">
                 {cartItems.map((item) => (
@@ -265,7 +265,7 @@ const Checkout = () => {
                     </div>
                     <div className="flex-1">
                       <h4 className="text-sm font-medium text-gray-900">{item.name}</h4>
-                      <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
+                      <p className="text-sm text-gray-500">数量: {item.quantity}</p>
                     </div>
                     <span className="text-sm font-medium text-gray-900">
                       {formatPrice(item.subtotal || item.price * item.quantity)}
@@ -276,20 +276,20 @@ const Checkout = () => {
 
               <div className="border-t border-gray-200 pt-4 space-y-2">
                 <div className="flex justify-between text-sm text-gray-600">
-                  <span>Subtotal</span>
+                  <span>小计</span>
                   <span>{formatPrice(cartTotal)}</span>
                 </div>
                 <div className="flex justify-between text-sm text-gray-600">
-                  <span>Tax (8%)</span>
+                  <span>税费 (8%)</span>
                   <span>{formatPrice(tax)}</span>
                 </div>
                 <div className="flex justify-between text-sm text-gray-600">
-                  <span>Shipping</span>
-                  <span>{shipping === 0 ? 'Free' : formatPrice(shipping)}</span>
+                  <span>运费</span>
+                  <span>{shipping === 0 ? '免费' : formatPrice(shipping)}</span>
                 </div>
                 <div className="border-t border-gray-200 pt-2">
                   <div className="flex justify-between text-lg font-semibold text-gray-900">
-                    <span>Total</span>
+                    <span>合计</span>
                     <span>{formatPrice(total)}</span>
                   </div>
                 </div>

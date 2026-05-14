@@ -35,7 +35,7 @@ const ProductCard = ({ product }) => {
 
   const handleToggleFavorite = async () => {
     if (!isAuthenticated) {
-      addToast('Please sign in to add favorites', 'warning');
+      addToast('请先登录以添加收藏', 'warning');
       window.location.href = '/login';
       return;
     }
@@ -57,7 +57,7 @@ const ProductCard = ({ product }) => {
 
   const handleAddToCart = async () => {
     if (!isAuthenticated) {
-      addToast('Please sign in to add to cart', 'warning');
+      addToast('请先登录以添加到购物车', 'warning');
       window.location.href = '/login';
       return;
     }
@@ -65,10 +65,10 @@ const ProductCard = ({ product }) => {
     setIsAdding(true);
     try {
       await addToCart(product.id, 1);
-      addToast(`${product.name} added to cart!`, 'success');
+      addToast(`${product.name} 已添加到购物车！`, 'success');
     } catch (error) {
       console.error('Failed to add to cart:', error);
-      addToast('Failed to add to cart', 'error');
+      addToast('添加到购物车失败', 'error');
     } finally {
       setIsAdding(false);
     }
@@ -109,7 +109,7 @@ const ProductCard = ({ product }) => {
                 ? 'bg-red-500 hover:bg-red-600'
                 : 'bg-white hover:bg-gray-50'
             }`}
-            title={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
+            title={isFavorited ? '取消收藏' : '添加收藏'}
           >
             <Heart
               size={16}
@@ -124,12 +124,12 @@ const ProductCard = ({ product }) => {
 
         {product.stock <= 10 && product.stock > 0 && (
           <span className="absolute top-2 left-2 badge badge-warning">
-            Low Stock
+            库存不足
           </span>
         )}
         {product.stock === 0 && (
           <span className="absolute top-2 left-2 badge badge-error">
-            Out of Stock
+            缺货
           </span>
         )}
       </div>
@@ -181,13 +181,13 @@ const ProductCard = ({ product }) => {
           {isAdding ? (
             <>
               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              <span>Adding...</span>
+              <span>添加中...</span>
             </>
           ) : (
             <>
               <ShoppingCart size={16} />
               <span>
-                {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+                {product.stock === 0 ? '缺货' : '加入购物车'}
               </span>
             </>
           )}

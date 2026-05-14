@@ -23,10 +23,10 @@ const Footer = () => {
               <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-lg">E</span>
               </div>
-              <span className="text-xl font-bold">E-commerce Store</span>
+              <span className="text-xl font-bold">电商商城</span>
             </div>
             <p className="text-gray-300 mb-4 max-w-md">
-              Your trusted destination for quality products, exceptional service, and seamless shopping experience.
+              您值得信赖的购物目的地，提供优质商品、卓越服务和无缝购物体验。
             </p>
             <div className="flex space-x-4">
               <a href="https://www.linkedin.com/in/dera-delis" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
@@ -53,27 +53,27 @@ const Footer = () => {
           {/* Quick Links */}
           <div>
             <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase mb-4">
-              Quick Links
+              快速链接
             </h3>
             <ul className="space-y-2">
               <li>
                 <Link to="/products" className="text-gray-300 hover:text-white transition-colors">
-                  All Products
+                  所有商品
                 </Link>
               </li>
               <li>
                 <Link to="/products?category=Electronics" className="text-gray-300 hover:text-white transition-colors">
-                  Electronics
+                  电子产品
                 </Link>
               </li>
               <li>
                 <Link to="/products?category=Clothing" className="text-gray-300 hover:text-white transition-colors">
-                  Clothing
+                  服装
                 </Link>
               </li>
               <li>
                 <Link to="/products?category=Home%20%26%20Garden" className="text-gray-300 hover:text-white transition-colors">
-                  Home & Garden
+                  家居园艺
                 </Link>
               </li>
             </ul>
@@ -82,38 +82,38 @@ const Footer = () => {
           {/* Customer Service */}
           <div>
             <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase mb-4">
-              Customer Service
+              客户服务
             </h3>
             <ul className="space-y-2">
               <li>
                 <Link to="/orders" className="text-gray-300 hover:text-white transition-colors">
-                  Order Tracking
+                  订单追踪
                 </Link>
               </li>
               <li>
                 <a href="https://wa.me/2347049073197" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors">
-                  WhatsApp Support
+                  WhatsApp 支持
                 </a>
               </li>
               <li>
                 <a href="mailto:dera.delis@gmail.com" className="text-gray-300 hover:text-white transition-colors">
-                  Email Support
+                  邮箱支持
                 </a>
               </li>
               <li>
-                <button 
+                <button
                   onClick={() => setShowReturnsModal(true)}
                   className="text-gray-300 hover:text-white transition-colors text-left"
                 >
-                  Returns & Exchanges
+                  退换货政策
                 </button>
               </li>
               <li>
-                <button 
+                <button
                   onClick={() => setShowFAQModal(true)}
                   className="text-gray-300 hover:text-white transition-colors text-left"
                 >
-                  FAQ
+                  常见问题
                 </button>
               </li>
             </ul>
@@ -123,26 +123,26 @@ const Footer = () => {
         <div className="border-t border-gray-800 mt-8 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 text-sm">
-              © 2024 E-commerce Store. All rights reserved.
+              © 2024 电商商城. 保留所有权利。
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
-              <button 
+              <button
                 onClick={() => setShowPrivacyModal(true)}
                 className="text-gray-400 hover:text-white text-sm transition-colors"
               >
-                Privacy Policy
+                隐私政策
               </button>
-              <button 
+              <button
                 onClick={() => setShowTermsModal(true)}
                 className="text-gray-400 hover:text-white text-sm transition-colors"
               >
-                Terms of Service
+                服务条款
               </button>
-              <button 
+              <button
                 onClick={() => setShowCookieModal(true)}
                 className="text-gray-400 hover:text-white text-sm transition-colors"
               >
-                Cookie Policy
+                Cookie政策
               </button>
             </div>
           </div>
@@ -150,31 +150,28 @@ const Footer = () => {
       </div>
 
       {/* Modals */}
-      <ReturnsExchangesModal 
-        isOpen={showReturnsModal} 
-        onClose={() => setShowReturnsModal(false)} 
+      <ReturnsExchangesModal
+        isOpen={showReturnsModal}
+        onClose={() => setShowReturnsModal(false)}
       />
-      <FAQModal 
-        isOpen={showFAQModal} 
-        onClose={() => setShowFAQModal(false)} 
+      <FAQModal
+        isOpen={showFAQModal}
+        onClose={() => setShowFAQModal(false)}
       />
-      <PrivacyPolicyModal 
-        isOpen={showPrivacyModal} 
-        onClose={() => setShowPrivacyModal(false)} 
+      <PrivacyPolicyModal
+        isOpen={showPrivacyModal}
+        onClose={() => setShowPrivacyModal(false)}
       />
-      <TermsOfServiceModal 
-        isOpen={showTermsModal} 
-        onClose={() => setShowTermsModal(false)} 
+      <TermsOfServiceModal
+        isOpen={showTermsModal}
+        onClose={() => setShowTermsModal(false)}
       />
-      <CookiePolicyModal 
-        isOpen={showCookieModal} 
-        onClose={() => setShowCookieModal(false)} 
+      <CookiePolicyModal
+        isOpen={showCookieModal}
+        onClose={() => setShowCookieModal(false)}
       />
     </footer>
   );
 };
 
 export default Footer;
-
-
-

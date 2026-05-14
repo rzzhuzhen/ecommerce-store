@@ -26,14 +26,14 @@ const Signup = () => {
         email: formData.email
       });
       if (resendError) throw resendError;
-      setSuccessMessage('Confirmation email resent! Please check your inbox.');
+      setSuccessMessage('确认邮件已重新发送！请查收邮件并点击确认链接。');
     } catch (err) {
-      setError(err.message || 'Failed to resend confirmation email');
+      setError(err.message || '重新发送确认邮件失败');
     } finally {
       setResendLoading(false);
     }
   };
-  
+
   const { signup } = useAuth();
   const navigate = useNavigate();
 
@@ -49,17 +49,17 @@ const Signup = () => {
     setError('');
 
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+      setError('两次输入的密码不一致');
       return;
     }
 
     if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters long');
+      setError('密码长度至少为6个字符');
       return;
     }
 
     setLoading(true);
-    
+
     try {
       const result = await signup({
         first_name: formData.firstName,
@@ -67,7 +67,7 @@ const Signup = () => {
         email: formData.email,
         password: formData.password
       });
-      
+
       if (result.success) {
         if (result.needsConfirmation) {
           setSuccessMessage(result.message);
@@ -77,11 +77,11 @@ const Signup = () => {
           navigate('/');
         }
       } else {
-        setError(result.error || 'Signup failed');
+        setError(result.error || '注册失败');
       }
     } catch (error) {
-      console.error('Signup failed:', error);
-      setError('Signup failed. Please try again.');
+      console.error('注册失败:', error);
+      setError('注册失败，请重试。');
     } finally {
       setLoading(false);
     }
@@ -96,12 +96,12 @@ const Signup = () => {
           </div>
         </div>
         <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
-          Create your account
+          创建账户
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
-          Or{' '}
+          或者{' '}
           <Link to="/login" className="font-medium text-primary-600 hover:text-primary-500">
-            sign in to your existing account
+            登录已有账户
           </Link>
         </p>
       </div>
@@ -124,7 +124,7 @@ const Signup = () => {
                   disabled={resendLoading}
                   className="text-sm font-medium text-primary-600 hover:text-primary-500 underline"
                 >
-                  {resendLoading ? 'Sending...' : 'Resend confirmation email'}
+                  {resendLoading ? '发送中...' : '重新发送确认邮件'}
                 </button>
               </div>
             )}
@@ -132,7 +132,7 @@ const Signup = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
-                  First Name
+                  名
                 </label>
                 <div className="mt-1">
                   <input
@@ -150,7 +150,7 @@ const Signup = () => {
 
               <div>
                 <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
-                  Last Name
+                  姓
                 </label>
                 <div className="mt-1">
                   <input
@@ -169,7 +169,7 @@ const Signup = () => {
 
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email address
+                邮箱地址
               </label>
               <div className="mt-1">
                 <input
@@ -187,7 +187,7 @@ const Signup = () => {
 
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
+                密码
               </label>
               <div className="mt-1">
                 <input
@@ -205,7 +205,7 @@ const Signup = () => {
 
             <div>
               <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
-                Confirm Password
+                确认密码
               </label>
               <div className="mt-1">
                 <input
@@ -227,7 +227,7 @@ const Signup = () => {
                 disabled={loading}
                 className="w-full btn-primary py-3 text-lg font-medium"
               >
-                {loading ? 'Creating account...' : 'Create account'}
+                {loading ? '创建中...' : '创建账户'}
               </button>
             </div>
           </form>
@@ -238,18 +238,18 @@ const Signup = () => {
                 <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">By signing up, you agree to our</span>
+                <span className="px-2 bg-white text-gray-500">点击注册即表示您同意</span>
               </div>
             </div>
 
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
                 <button type="button" className="font-medium text-primary-600 hover:text-primary-500">
-                  Terms of Service
+                  服务条款
                 </button>
-                {' '}and{' '}
+                {' '}和{' '}
                 <button type="button" className="font-medium text-primary-600 hover:text-primary-500">
-                  Privacy Policy
+                  隐私政策
                 </button>
               </p>
             </div>
@@ -261,6 +261,3 @@ const Signup = () => {
 };
 
 export default Signup;
-
-
-

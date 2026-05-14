@@ -80,7 +80,7 @@ export const AuthProvider = ({ children }) => {
         await supabase.auth.signOut();
         return {
           success: false,
-          error: 'Please confirm your email address. Check your inbox for the confirmation link.'
+          error: '请验证您的邮箱。请查收邮件并点击确认链接。'
         };
       }
 
@@ -99,7 +99,7 @@ export const AuthProvider = ({ children }) => {
 
       return { success: true };
     } catch (error) {
-      const errorMessage = error.message || 'Invalid email or password';
+      const errorMessage = error.message || '邮箱或密码错误';
       setError(errorMessage);
       return { success: false, error: errorMessage };
     }
@@ -126,7 +126,7 @@ export const AuthProvider = ({ children }) => {
         return {
           success: true,
           needsConfirmation: true,
-          message: 'Please check your email and click the confirmation link to activate your account.'
+          message: '请查收邮件并点击确认链接以激活您的账户。'
         };
       }
 
@@ -134,7 +134,7 @@ export const AuthProvider = ({ children }) => {
 
       return { success: true };
     } catch (error) {
-      const errorMessage = error.message || 'Signup failed';
+      const errorMessage = error.message || '注册失败';
       setError(errorMessage);
       return { success: false, error: errorMessage };
     }

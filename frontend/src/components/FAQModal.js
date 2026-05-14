@@ -12,51 +12,51 @@ const FAQModal = ({ isOpen, onClose }) => {
 
   const faqs = [
     {
-      question: "How do I place an order?",
-      answer: "Simply browse our products, add items to your cart, and proceed to checkout. You'll need to create an account or sign in to complete your purchase."
+      question: "如何下单？",
+      answer: "只需浏览我们的商品，将商品添加到购物车，然后结账。您需要创建账户或登录才能完成购买。"
     },
     {
-      question: "What payment methods do you accept?",
-      answer: "We accept all major credit cards, PayPal, and bank transfers. All payments are processed securely through our encrypted payment gateway."
+      question: "你们接受哪些支付方式？",
+      answer: "我们接受所有主要信用卡、PayPal和银行转账。所有支付都通过加密支付网关安全处理。"
     },
     {
-      question: "How long does shipping take?",
-      answer: "Standard shipping takes 3-5 business days within the country, and 7-14 business days for international orders. Express shipping options are available for faster delivery."
+      question: "配送需要多长时间？",
+      answer: "标准配送在国内需要3-5个工作日，国际订单需要7-14个工作日。我们提供加急配送选项以加快送达。"
     },
     {
-      question: "Can I track my order?",
-      answer: "Yes! Once your order ships, you'll receive a tracking number via email. You can also track your order status in your account dashboard."
+      question: "我可以追踪我的订单吗？",
+      answer: "是的！订单发货后，您将通过邮箱收到追踪号码。您也可以在账户仪表板中追踪订单状态。"
     },
     {
-      question: "What is your return policy?",
-      answer: "We offer a 30-day return policy for most items. Items must be in original condition with tags attached. Please see our Returns & Exchanges section for full details."
+      question: "你们的退货政策是什么？",
+      answer: "我们为大多数商品提供30天退货政策。商品必须保持原样并附有标签。请参阅我们的退换货政策了解详情。"
     },
     {
-      question: "How do I contact customer support?",
-      answer: "You can reach us via WhatsApp at +234 704 907 3197, email at dera.delis@gmail.com, or through our contact form. We typically respond within 24 hours."
+      question: "如何联系客服？",
+      answer: "您可以通过WhatsApp +234 704 907 3197、邮箱 dera.delis@gmail.com 或联系我们表单联系我们。我们通常在24小时内回复。"
     },
     {
-      question: "Do you offer international shipping?",
-      answer: "Yes, we ship to most countries worldwide. International shipping rates and delivery times vary by destination. Check out at checkout for specific rates to your location."
+      question: "你们提供国际配送吗？",
+      answer: "是的，我们向大多数国家和地区发货。国际配送费率和时间因目的地而异。在结账时查看您所在地区的具体费率。"
     },
     {
-      question: "How do I update my account information?",
-      answer: "Log into your account and go to 'Account Settings' to update your personal information, shipping addresses, and payment methods."
+      question: "如何更新账户信息？",
+      answer: "登录您的账户，进入"账户设置"更新您的个人信息、收货地址和支付方式。"
     },
     {
-      question: "What if I receive a damaged item?",
-      answer: "If you receive a damaged item, please contact us immediately with photos of the damage. We'll arrange for a replacement or full refund at no cost to you."
+      question: "如果收到损坏的商品怎么办？",
+      answer: "如果您收到损坏的商品，请立即联系我们并附上损坏照片。我们将为您安排更换或全额退款，无需您承担任何费用。"
     },
     {
-      question: "Do you have a mobile app?",
-      answer: "Currently, we don't have a mobile app, but our website is fully responsive and optimized for mobile devices. You can bookmark our site for easy access."
+      question: "你们有移动应用吗？",
+      answer: "目前我们没有移动应用，但我们的网站完全响应并针对移动设备进行了优化。您可以收藏我们的网站以便轻松访问。"
     }
   ];
 
   return (
     <div className={`fixed inset-0 z-50 overflow-y-auto ${isOpen ? 'block' : 'hidden'}`}>
       <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-        <div 
+        <div
           className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
           onClick={onClose}
         ></div>
@@ -69,7 +69,7 @@ const FAQModal = ({ isOpen, onClose }) => {
               <div className="mt-3 text-center sm:mt-0 sm:text-left w-full">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-lg leading-6 font-medium text-gray-900">
-                    Frequently Asked Questions
+                    常见问题
                   </h3>
                   <button
                     onClick={onClose}
@@ -118,7 +118,7 @@ const FAQModal = ({ isOpen, onClose }) => {
               onClick={onClose}
               className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-600 text-base font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:ml-3 sm:w-auto sm:text-sm"
             >
-              Close
+              关闭
             </button>
           </div>
         </div>
