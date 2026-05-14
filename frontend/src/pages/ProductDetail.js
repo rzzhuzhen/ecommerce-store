@@ -88,7 +88,7 @@ const ProductDetail = () => {
     setAddingToCart(true);
     try {
       await addToCart(id, quantity);
-      addToast(`${product.name} 已添加到购物车！`, 'success');
+      addToast(`¥{product.name} 已添加到购物车！`, 'success');
     } catch (error) {
       console.error('Failed to add to cart:', error);
       addToast('添加到购物车失败', 'error');
@@ -100,7 +100,7 @@ const ProductDetail = () => {
   const formatPrice = (price) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'CNY',
     }).format(price);
   };
 
@@ -167,7 +167,7 @@ const ProductDetail = () => {
                       <Star
                         key={i}
                         size={20}
-                        className={`${
+                        className={`¥{
                           i < Math.floor(product.rating)
                             ? 'text-yellow-400 fill-current'
                             : 'text-gray-300'
@@ -189,11 +189,11 @@ const ProductDetail = () => {
 
               <div className="flex items-center space-x-4">
                 <span className="text-sm text-gray-600">库存:</span>
-                <span className={`font-medium ${
+                <span className={`font-medium ¥{
                   product.stock > 10 ? 'text-green-600' :
                   product.stock > 0 ? 'text-yellow-600' : 'text-red-600'
                 }`}>
-                  {product.stock > 0 ? `${product.stock} 有货` : '缺货'}
+                  {product.stock > 0 ? `¥{product.stock} 有货` : '缺货'}
                 </span>
               </div>
             </div>
@@ -240,7 +240,7 @@ const ProductDetail = () => {
                   {isAuthenticated && (
                     <button
                       onClick={handleToggleFavorite}
-                      className={`p-3 border rounded-lg transition-colors ${
+                      className={`p-3 border rounded-lg transition-colors ¥{
                         isFavorited
                           ? 'border-red-500 bg-red-50 text-red-600 hover:bg-red-100'
                           : 'border-gray-300 text-gray-600 hover:bg-gray-50'

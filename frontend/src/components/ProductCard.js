@@ -65,7 +65,7 @@ const ProductCard = ({ product }) => {
     setIsAdding(true);
     try {
       await addToCart(product.id, 1);
-      addToast(`${product.name} 已添加到购物车！`, 'success');
+      addToast(`¥{product.name} 已添加到购物车！`, 'success');
     } catch (error) {
       console.error('Failed to add to cart:', error);
       addToast('添加到购物车失败', 'error');
@@ -77,14 +77,14 @@ const ProductCard = ({ product }) => {
   const formatPrice = (price) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'CNY',
     }).format(price);
   };
 
   return (
     <div className="product-card group">
       <div className="relative overflow-hidden bg-gray-100">
-        <Link to={`/products/${product.id}`}>
+        <Link to={`/products/¥{product.id}`}>
           {product.image_url && !imageError ? (
             <img
               src={product.image_url}
@@ -104,7 +104,7 @@ const ProductCard = ({ product }) => {
         {isAuthenticated && (
           <button
             onClick={handleToggleFavorite}
-            className={`absolute top-2 right-2 p-2 rounded-full shadow-soft opacity-0 group-hover:opacity-100 transition-all duration-200 ${
+            className={`absolute top-2 right-2 p-2 rounded-full shadow-soft opacity-0 group-hover:opacity-100 transition-all duration-200 ¥{
               isFavorited
                 ? 'bg-red-500 hover:bg-red-600'
                 : 'bg-white hover:bg-gray-50'
@@ -113,7 +113,7 @@ const ProductCard = ({ product }) => {
           >
             <Heart
               size={16}
-              className={`${
+              className={`¥{
                 isFavorited
                   ? 'text-white fill-current'
                   : 'text-gray-600'
@@ -139,7 +139,7 @@ const ProductCard = ({ product }) => {
           {product.category}
         </div>
 
-        <Link to={`/products/${product.id}`}>
+        <Link to={`/products/¥{product.id}`}>
           <h3 className="font-medium text-gray-900 mb-2 line-clamp-2 hover:text-primary-600 transition-colors">
             {product.name}
           </h3>
@@ -152,7 +152,7 @@ const ProductCard = ({ product }) => {
                 <Star
                   key={i}
                   size={14}
-                  className={`${
+                  className={`¥{
                     i < Math.floor(product.rating)
                       ? 'text-yellow-400 fill-current'
                       : 'text-gray-300'
@@ -172,7 +172,7 @@ const ProductCard = ({ product }) => {
         <button
           onClick={handleAddToCart}
           disabled={isAdding || product.stock === 0}
-          className={`w-full flex items-center justify-center space-x-2 py-2 px-4 rounded-lg font-medium transition-all duration-200 ${
+          className={`w-full flex items-center justify-center space-x-2 py-2 px-4 rounded-lg font-medium transition-all duration-200 ¥{
             product.stock === 0
               ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
               : 'bg-primary-600 hover:bg-primary-700 text-white hover:shadow-medium'
