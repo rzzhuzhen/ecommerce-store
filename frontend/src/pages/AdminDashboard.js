@@ -126,6 +126,7 @@ const AdminDashboard = () => {
   };
 
   const handleDeleteProduct = async (id) => {
+    // eslint-disable-next-line no-restricted-globals
     if (!confirm('Are you sure you want to delete this product?')) return;
     try {
       const { error } = await supabase.from('products').delete().eq('id', id);
