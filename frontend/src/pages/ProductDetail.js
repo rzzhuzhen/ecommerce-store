@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Star, ShoppingCart, Heart, ArrowLeft } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import { productService, favoritesService } from '../api/supabase';
 
 const ProductDetail = () => {
@@ -16,6 +17,7 @@ const ProductDetail = () => {
 
   const { addToCart } = useCart();
   const { isAuthenticated } = useAuth();
+  const { addToast } = useToast();
   const navigate = useNavigate();
 
   const loadProduct = useCallback(async () => {
@@ -56,6 +58,7 @@ const ProductDetail = () => {
 
   const handleToggleFavorite = async () => {
     if (!isAuthenticated) {
+      addToast('Please sign in to add favorites', 'warning');
       navigate('/login');
       return;
     }
@@ -77,6 +80,7 @@ const ProductDetail = () => {
 
   const handleAddToCart = async () => {
     if (!isAuthenticated) {
+      addToast('Please sign in to add to cart', 'warning');
       navigate('/login');
       return;
     }
@@ -84,8 +88,10 @@ const ProductDetail = () => {
     setAddingToCart(true);
     try {
       await addToCart(id, quantity);
+      addToast(`${product.name} added to cart!`, 'success');
     } catch (error) {
       console.error('Failed to add to cart:', error);
+      addToast('Failed to add to cart', 'error');
     } finally {
       setAddingToCart(false);
     }

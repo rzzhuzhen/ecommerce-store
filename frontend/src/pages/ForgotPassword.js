@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { createClient } from '../utils/supabase';
+
+const supabase = createClient();
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -14,13 +17,15 @@ const ForgotPassword = () => {
     setMessage('');
 
     try {
-      // Simulate API call for password reset
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // For demo purposes, just show success message
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+
+      if (resetError) throw resetError;
+
       setMessage('Password reset instructions have been sent to your email address.');
-    } catch (error) {
-      setError('Failed to send password reset email. Please try again.');
+    } catch (err) {
+      setError(err.message || 'Failed to send password reset email. Please try again.');
     } finally {
       setLoading(false);
     }

@@ -3,11 +3,13 @@ import { Link } from 'react-router-dom';
 import { Star, ShoppingCart, Heart } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import { favoritesService } from '../api/supabase';
 
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
   const { isAuthenticated } = useAuth();
+  const { addToast } = useToast();
   const [isAdding, setIsAdding] = useState(false);
   const [isFavorited, setIsFavorited] = useState(false);
   const [imageError, setImageError] = useState(false);
@@ -33,6 +35,7 @@ const ProductCard = ({ product }) => {
 
   const handleToggleFavorite = async () => {
     if (!isAuthenticated) {
+      addToast('Please sign in to add favorites', 'warning');
       window.location.href = '/login';
       return;
     }
@@ -54,6 +57,7 @@ const ProductCard = ({ product }) => {
 
   const handleAddToCart = async () => {
     if (!isAuthenticated) {
+      addToast('Please sign in to add to cart', 'warning');
       window.location.href = '/login';
       return;
     }
@@ -61,8 +65,10 @@ const ProductCard = ({ product }) => {
     setIsAdding(true);
     try {
       await addToCart(product.id, 1);
+      addToast(`${product.name} added to cart!`, 'success');
     } catch (error) {
       console.error('Failed to add to cart:', error);
+      addToast('Failed to add to cart', 'error');
     } finally {
       setIsAdding(false);
     }
